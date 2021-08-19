@@ -1,7 +1,5 @@
 package com.lsp.tank;
 
-import java.awt.*;
-
 /**
  * @author ：Lisp
  * @date： 2021/8/19
@@ -11,9 +9,12 @@ import java.awt.*;
  */
 public class Main {
 
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // 窗口类
-        Frame f = new TankFrame();
+        TankFrame tf = new TankFrame();
+        while (true){
+            Thread.sleep(50);
+            tf.repaint();// 会调用paint方法
+        }
     }
 }

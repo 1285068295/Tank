@@ -15,6 +15,9 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
 
+    /**
+     * 坐标轴左上角为原点 向下向右为正
+     */
     int x = 200, y = 200;
 
     public TankFrame() {
@@ -22,7 +25,8 @@ public class TankFrame extends Frame {
         setResizable(false);
         setTitle("tank war");
         setVisible(true);
-
+        // 键盘监听处理
+        this.addKeyListener(new MyKeyListener());
 
         // 监听器 监听窗口关闭  从控制台中断程序
         addWindowListener(new WindowAdapter() {
@@ -49,6 +53,8 @@ public class TankFrame extends Frame {
 
 
     /**
+     * 这个类只提供TankFrame使用 所以定义为内部类
+     * 键盘监听事件
      * 方向+速度决定坦克往哪个位置走
      */
     class MyKeyListener extends KeyAdapter{
