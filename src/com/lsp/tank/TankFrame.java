@@ -1,7 +1,5 @@
 package com.lsp.tank;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -24,6 +22,7 @@ public class TankFrame extends Frame {
         setResizable(false);
         setTitle("tank war");
         setVisible(true);
+
 
         // 监听器 监听窗口关闭  从控制台中断程序
         addWindowListener(new WindowAdapter() {
@@ -58,9 +57,6 @@ public class TankFrame extends Frame {
         boolean bR = false;
         boolean bU = false;
         Boolean bD = false;
-
-
-
 
         /**
          * 按下键盘时 设定方向

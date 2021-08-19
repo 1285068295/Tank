@@ -1,8 +1,6 @@
 package com.lsp.tank;
 
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  * @author ：Lisp
