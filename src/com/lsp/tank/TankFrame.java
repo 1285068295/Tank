@@ -15,14 +15,9 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
 
-    /**
-     * 坐标轴左上角为原点 向下向右为正
-     */
-    int x = 200, y = 200;
-    Dir dir = Dir.LEFT;
-    /** 坦克速度*/
-    final int SPEED = 10;
 
+    // 创建一个单人的坦克
+    Tank myTank = new Tank(50,50,Dir.RIGHT);
 
     public TankFrame() {
         setSize(800, 600);
@@ -44,29 +39,11 @@ public class TankFrame extends Frame {
     /**
      * 会清空页面 重新画图
      * while死循环执行repaint方法会一直调用paint的方法
-     *
-     *
      * @param g
      */
     @Override
     public void paint(Graphics g) {
-        // 画出一个矩形 向右x变大  向下y变大
-        g.fillRect(x, y, 50, 50);
-        switch (dir){
-            case LEFT:
-                x-=SPEED;
-                break;
-            case RIGHT:
-                x+=SPEED;
-                break;
-            case UP:
-                y-=SPEED;
-                break;
-            case DOWN:
-                y+=SPEED;
-                break;
-        }
-
+        myTank.paint(g);
     }
 
 
@@ -108,11 +85,11 @@ public class TankFrame extends Frame {
                 default:
                     break;
             }
-
+            myTank.setMoving(true);
             setMainTankDir();
         }
         /**
-         * 松开键盘时 设定方向
+         * 松开键盘时必须要恢复为false
          * @param e
          */
         @Override
@@ -135,6 +112,9 @@ public class TankFrame extends Frame {
                     break;
 
             }
+
+            // 松开键盘时不移动
+            myTank.setMoving(false);
             // 实际上这里是没有修改方向的  因为都是false不会改变dir的值
             // 也就是说只有在按下键时 修改了dir的值改变了坦克的移动方向
             setMainTankDir();
@@ -145,10 +125,18 @@ public class TankFrame extends Frame {
          * 改变坦克的方向
          */
         private void setMainTankDir() {
-            if(bL){ dir = Dir.LEFT;}
-            if(bR){ dir = Dir.RIGHT;}
-            if(bU){ dir = Dir.UP;}
-            if(bD){ dir = Dir.DOWN;}
+            if (bL) {
+                myTank.setDir(Dir.LEFT);
+            }
+            if (bR) {
+                myTank.setDir(Dir.RIGHT);
+            }
+            if (bU) {
+                myTank.setDir(Dir.UP);
+            }
+            if (bD) {
+                myTank.setDir(Dir.DOWN);
+            }
 
         }
     }
