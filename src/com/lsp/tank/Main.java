@@ -17,4 +17,5 @@ public class Main {
             tf.repaint();// 会调用paint方法
         }
     }
+
 }
