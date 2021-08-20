@@ -4,7 +4,7 @@ package com.lsp.tank;
  * @author ：Lisp
  * @date： 2021/8/19
  * @version: V1.0
- * @slogan: 天下风云出我辈，一入代码岁月催
+ * @slogan:
  * @description :
  */
 public class Main {

@@ -10,7 +10,7 @@ import java.awt.event.WindowEvent;
  * @author ：Lisp
  * @date： 2021/8/19
  * @version: V1.0
- * @slogan: 天下风云出我辈，一入代码岁月催
+ * @slogan:
  * @description :
  */
 public class TankFrame extends Frame {
@@ -19,6 +19,10 @@ public class TankFrame extends Frame {
      * 坐标轴左上角为原点 向下向右为正
      */
     int x = 200, y = 200;
+    Dir dir = Dir.LEFT;
+    /** 坦克速度*/
+    final int SPEED = 10;
+
 
     public TankFrame() {
         setSize(800, 600);
@@ -39,15 +43,29 @@ public class TankFrame extends Frame {
 
     /**
      * 会清空页面 重新画图
+     * while死循环执行repaint方法会一直调用paint的方法
+     *
+     *
      * @param g
      */
     @Override
     public void paint(Graphics g) {
-        System.out.println("panit");
         // 画出一个矩形 向右x变大  向下y变大
         g.fillRect(x, y, 50, 50);
-        x += 10;
-        y += 10;
+        switch (dir){
+            case LEFT:
+                x-=SPEED;
+                break;
+            case RIGHT:
+                x+=SPEED;
+                break;
+            case UP:
+                y-=SPEED;
+                break;
+            case DOWN:
+                y+=SPEED;
+                break;
+        }
 
     }
 
@@ -56,6 +74,9 @@ public class TankFrame extends Frame {
      * 这个类只提供TankFrame使用 所以定义为内部类
      * 键盘监听事件
      * 方向+速度决定坦克往哪个位置走
+     * 根据四个状态来确定坦克的方向
+     *
+     *
      */
     class MyKeyListener extends KeyAdapter{
         // 根据按键来确定坦克的方向
@@ -87,6 +108,8 @@ public class TankFrame extends Frame {
                 default:
                     break;
             }
+
+            setMainTankDir();
         }
         /**
          * 松开键盘时 设定方向
@@ -112,6 +135,21 @@ public class TankFrame extends Frame {
                     break;
 
             }
+            // 实际上这里是没有修改方向的  因为都是false不会改变dir的值
+            // 也就是说只有在按下键时 修改了dir的值改变了坦克的移动方向
+            setMainTankDir();
+        }
+
+
+        /**
+         * 改变坦克的方向
+         */
+        private void setMainTankDir() {
+            if(bL){ dir = Dir.LEFT;}
+            if(bR){ dir = Dir.RIGHT;}
+            if(bU){ dir = Dir.UP;}
+            if(bD){ dir = Dir.DOWN;}
+
         }
     }
 }
