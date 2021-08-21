@@ -22,6 +22,9 @@ public class TankFrame extends Frame {
     /** 创建坦克子弹 */
     Bullet bullet = new Bullet(20,20,Dir.DOWN);
 
+    /** 游戏界面的大小*/
+    static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
+
 
     /**
      * 用来存储按下的方向四个键，当同时按下多个键时，以最后一次的按键为主
@@ -34,7 +37,7 @@ public class TankFrame extends Frame {
 
 
     public TankFrame() {
-        setSize(800, 600);
+        setSize(GAME_WIDTH, GAME_HEIGHT);
         setResizable(false);
         setTitle("tank war");
         setVisible(true);
@@ -50,10 +53,33 @@ public class TankFrame extends Frame {
         });
     }
 
+
+    Image offScreenImage = null;
+
+    /**
+     * 双缓冲解决闪烁问题
+     * 先把画面画到内存里面，画完后直接从内存中输出到屏幕上
+     * update 方法在paint方法之前进行的调用的
+     */
+    @Override
+    public void update(Graphics g) {
+        if (offScreenImage == null) {
+            offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
+        }
+        Graphics gOffScreen = offScreenImage.getGraphics();
+        Color c = gOffScreen.getColor();
+        gOffScreen.setColor(Color.BLACK);
+        gOffScreen.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        gOffScreen.setColor(c);
+        paint(gOffScreen);
+        g.drawImage(offScreenImage, 0, 0, null);
+    }
+
+
     /**
      * 会清空页面 重新画图
      * while死循环执行repaint方法会一直调用paint的方法
-     * @param g
+     * @param g 画笔
      */
     @Override
     public void paint(Graphics g) {
