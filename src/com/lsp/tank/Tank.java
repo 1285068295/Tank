@@ -18,15 +18,21 @@ public class Tank {
     /**
      * 是否移动坦克 只有在按下上下左右键时才移动坦克
      */
-
     private boolean moving = false;
+
+    /**
+     * 游戏窗口引用
+     */
+    private TankFrame tf;
+
     /**
      * 构造方法创建坦克时默认设置方向为向右
      */
-	public Tank(int x, int y, Dir dir ) {
+	public Tank(int x, int y, Dir dir, TankFrame tf) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
+		this.tf = tf;
 	}
 
     public int getX() {
@@ -88,7 +94,21 @@ public class Tank {
 
     public void paint(Graphics g) {
         // 画出一个矩形 向右x变大  向下y变大
+
+
+        Color c = g.getColor();
+        g.setColor(Color.WHITE);
+//        g.drawString("bullets:" + bullets.size(), 10, 60);
+//        g.drawString("tanks:" + tanks.size(), 10, 80);
+//        g.drawString("explodes" + explodes.size(), 10, 100);
         g.fillRect(x, y, 50, 50);
+        g.setColor(c);
+
+//        myTank.paint(g);
+
+
+
+
         if (!moving) {
             // 按下键盘修改为true才移动坦克
             return;
@@ -97,4 +117,10 @@ public class Tank {
     }
 
 
+    /**
+     * 发射子弹
+     */
+    public void fire() {
+        tf.bullets.add( new Bullet(this.x, this.y, this.dir, tf));
+    }
 }

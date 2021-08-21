@@ -1,11 +1,14 @@
 package com.lsp.tank;
 
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author ：Lisp
@@ -18,9 +21,9 @@ public class TankFrame extends Frame {
 
 
     /** 创建一个单人的坦克 */
-    Tank myTank = new Tank(20,20,Dir.RIGHT);
-    /** 创建坦克子弹 */
-    Bullet bullet = new Bullet(20,20,Dir.DOWN);
+    Tank myTank = new Tank(20, 20, Dir.RIGHT, this);
+    /** 创建坦克子弹容器 */
+    List<Bullet> bullets = new ArrayList<>();
 
     /** 游戏界面的大小*/
     static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
@@ -83,8 +86,18 @@ public class TankFrame extends Frame {
      */
     @Override
     public void paint(Graphics g) {
+
+        Color c = g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("子弹数量为:" + bullets.size(), 10,60);
+        g.setColor(c);
+
         myTank.paint(g);
-        bullet.paint(g);
+        // 所有的子弹都一样  使用普通循环删除处理即可
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+        }
+
     }
 
 
@@ -162,6 +175,10 @@ public class TankFrame extends Frame {
                     break;
                 case KeyEvent.VK_DOWN:
                     moveDir.remove(Dir.DOWN);
+                    break;
+                // 抬起ctrl发射一颗子弹
+                case KeyEvent.VK_CONTROL:
+                    myTank.fire();
                     break;
                 default:
                     break;

@@ -10,11 +10,18 @@ import java.awt.*;
  * @description :坦克子弹
  */
 public class Bullet {
+    /**
+     * 游戏窗口引用
+     */
+    private TankFrame tf;
 
-    private static final int SPEED = 10;
+    private static final int SPEED = 2;
     /** 子弹为圆形 外切正方形的长和宽的大小*/
     private static final int WIDTH = 10;
     private static final int HEIGHT = 10;
+
+    /**子弹是否还存活 默认存活的 */
+    private boolean living = true;
 
     /**
      * 子弹位置
@@ -23,13 +30,17 @@ public class Bullet {
     /** 子弹方向*/
     private Dir dir;
 
-    public Bullet(int x, int y, Dir dir) {
+    public Bullet(int x, int y, Dir dir, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.tf = tf;
     }
 
     public void paint(Graphics g){
+        if(!living) {
+            tf.bullets.remove(this);
+        }
         Color originalColor = g.getColor();
         g.setColor(Color.RED);
         // 设置子弹的颜色后画出子弹
@@ -59,6 +70,10 @@ public class Bullet {
                 break;
             default:
                 break;
+        }
+        // 移动越界的时候需要删除子弹  页面不再显示
+        if(x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT){
+            living = false;
         }
 
     }
