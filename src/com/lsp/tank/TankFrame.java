@@ -21,9 +21,12 @@ public class TankFrame extends Frame {
 
 
     /** 创建一个单人的坦克 */
-    Tank myTank = new Tank(20, 20, Dir.RIGHT, this);
+    Tank myTank = new Tank(200, 400, Dir.RIGHT, this);
     /** 创建坦克子弹容器 */
     List<Bullet> bullets = new ArrayList<>();
+
+    /** 创建敌人坦克容器 */
+    List<Tank> tanks = new ArrayList<>();
 
     /** 游戏界面的大小*/
     static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
@@ -94,8 +97,16 @@ public class TankFrame extends Frame {
 
         myTank.paint(g);
         // 所有的子弹都一样  使用普通循环删除处理即可
+        long t1 = System.currentTimeMillis();
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(g);
+        }
+        long t2 = System.currentTimeMillis();
+        System.out.println("画出子弹需要时间为"+ (t2 - t1));
+
+        // 画出敌人坦克
+        for (int i = 0; i < tanks.size(); i++) {
+            tanks.get(i).paint(g);
         }
 
     }

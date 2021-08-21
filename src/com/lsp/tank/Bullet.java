@@ -14,8 +14,11 @@ public class Bullet {
      * 游戏窗口引用
      */
     private TankFrame tf;
-    /** 子弹的速度 */
-    private static final int SPEED = 2;
+    /**
+     * 子弹的速度
+     * 注意需要于坦克的速度有差值 如果相同则同时移动时看不出来是否发射了子弹
+     */
+    private static final int SPEED = 4;
     /** 子弹为圆形 外切正方形的长和宽的大小*/
     public static int WIDTH = ResourceMgr.bulletU.getWidth();
     public static int HEIGHT = ResourceMgr.bulletU.getHeight();
