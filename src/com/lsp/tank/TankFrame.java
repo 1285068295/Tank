@@ -17,8 +17,12 @@ import java.util.LinkedList;
 public class TankFrame extends Frame {
 
 
-    // 创建一个单人的坦克
+    /** 创建一个单人的坦克 */
     Tank myTank = new Tank(20,20,Dir.RIGHT);
+    /** 创建坦克子弹 */
+    Bullet bullet = new Bullet(20,20,Dir.DOWN);
+
+
     /**
      * 用来存储按下的方向四个键，当同时按下多个键时，以最后一次的按键为主
      * 每松开一个键就从栈中弹出一个数据，所以栈中最多存4个按键数据
@@ -54,6 +58,7 @@ public class TankFrame extends Frame {
     @Override
     public void paint(Graphics g) {
         myTank.paint(g);
+        bullet.paint(g);
     }
 
 
@@ -70,6 +75,8 @@ public class TankFrame extends Frame {
 
         /**
          * 按着键盘不松手时会产生多个key，但是同一个key我们应该只加入一次
+         *
+         * 只有上下左右四个按键处理方向
          */
         @Override
         public void keyPressed(KeyEvent e) {
@@ -79,27 +86,34 @@ public class TankFrame extends Frame {
                     if (!moveDir.contains(Dir.LEFT)) {
                         moveDir.addLast(Dir.LEFT);
                     }
+                    myTank.setMoving(true);
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_RIGHT:
                     if (!moveDir.contains(Dir.RIGHT)) {
                         moveDir.addLast(Dir.RIGHT);
                     }
+                    myTank.setMoving(true);
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_UP:
                     if (!moveDir.contains(Dir.UP)) {
                         moveDir.addLast(Dir.UP);
                     }
+                    myTank.setMoving(true);
+                    setMainTankDir();
                     break;
                 case KeyEvent.VK_DOWN:
                     if (!moveDir.contains(Dir.DOWN)) {
                         moveDir.addLast(Dir.DOWN);
                     }
+                    myTank.setMoving(true);
+                    setMainTankDir();
                     break;
                 default:
                     break;
             }
-            myTank.setMoving(true);
-            setMainTankDir();
+
         }
         /**
          * 松开键盘时必须要恢复为false
@@ -141,6 +155,9 @@ public class TankFrame extends Frame {
          * 改变坦克的方向
          */
         private void setMainTankDir() {
+            if(moveDir.isEmpty()){
+                return;
+            }
             Dir dir =  moveDir.getLast();
             if (dir.equals(Dir.LEFT)) {
                 myTank.setDir(Dir.LEFT);
