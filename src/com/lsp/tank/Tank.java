@@ -7,6 +7,14 @@ public class Tank {
      * 坦克的速度
      */
     private static final int SPEED = 2;
+
+    /**
+     * 坦克的大小
+     */
+    public static int WIDTH = ResourceMgr.goodTankU.getWidth();
+    public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
+
+
     /**
      * 坦克的位置坐标
      */
@@ -93,24 +101,22 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        // 画出一个矩形 向右x变大  向下y变大
-
-
-        Color c = g.getColor();
-        g.setColor(Color.WHITE);
-//        g.drawString("bullets:" + bullets.size(), 10, 60);
-//        g.drawString("tanks:" + tanks.size(), 10, 80);
-//        g.drawString("explodes" + explodes.size(), 10, 100);
-        g.fillRect(x, y, 50, 50);
-        g.setColor(c);
-
-//        myTank.paint(g);
-
-
-
-
+        // 根据方向画出坦克
+        switch (dir) {
+            case LEFT:
+                g.drawImage(ResourceMgr.goodTankL, x, y, null);
+                break;
+            case UP:
+                g.drawImage(ResourceMgr.goodTankU, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(ResourceMgr.goodTankR, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(ResourceMgr.goodTankD, x, y, null);
+                break;
+        }
         if (!moving) {
-            // 按下键盘修改为true才移动坦克
             return;
         }
         move();
@@ -121,6 +127,9 @@ public class Tank {
      * 发射子弹
      */
     public void fire() {
-        tf.bullets.add( new Bullet(this.x, this.y, this.dir, tf));
+        // 子弹打出的初始位置为坦克的正中心
+        int bX = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
+        int bY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
+        tf.bullets.add( new Bullet(bX, bY, this.dir, this.tf));
     }
 }
