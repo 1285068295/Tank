@@ -9,7 +9,7 @@ public class Tank {
     private static final int SPEED = 2;
 
     /**
-     * 坦克的大小
+     * 坦克的大小 图片是 60*60
      */
     public static int WIDTH = ResourceMgr.goodTankU.getWidth();
     public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
@@ -128,8 +128,35 @@ public class Tank {
      */
     public void fire() {
         // 子弹打出的初始位置为坦克的正中心
-        int bX = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
-        int bY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
+        // 需要计算出子弹图片左上角的位置所以要减去图片一半长宽
+
+        int bX = this.x;
+        int bY = this.y;
+        switch (dir) {
+            case LEFT:
+                // 了让子弹贴住炮筒
+                bX = bX - Bullet.WIDTH;
+                bY = bY + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
+                break;
+            case RIGHT:
+                bX += Tank.WIDTH;
+                bY += Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
+                break;
+            case UP:
+                bX = bX + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
+                bY = bY - Bullet.HEIGHT;
+                break;
+            case DOWN:
+                bX = bX + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
+                bY = bY + Tank.HEIGHT;
+                break;
+            default:
+                break;
+        }
+
+
+
+
         tf.bullets.add( new Bullet(bX, bY, this.dir, this.tf));
     }
 }

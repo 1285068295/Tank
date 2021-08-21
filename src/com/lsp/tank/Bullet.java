@@ -14,11 +14,11 @@ public class Bullet {
      * 游戏窗口引用
      */
     private TankFrame tf;
-
+    /** 子弹的速度 */
     private static final int SPEED = 2;
     /** 子弹为圆形 外切正方形的长和宽的大小*/
-    private static final int WIDTH = 10;
-    private static final int HEIGHT = 10;
+    public static int WIDTH = ResourceMgr.bulletU.getWidth();
+    public static int HEIGHT = ResourceMgr.bulletU.getHeight();
 
     /**子弹是否还存活 默认存活的 */
     private boolean living = true;
@@ -41,11 +41,20 @@ public class Bullet {
         if(!living) {
             tf.bullets.remove(this);
         }
-        Color originalColor = g.getColor();
-        g.setColor(Color.RED);
-        // 设置子弹的颜色后画出子弹
-        g.fillOval(x,y,WIDTH,HEIGHT);
-        g.setColor(originalColor);
+        switch(dir) {
+            case LEFT:
+                g.drawImage(ResourceMgr.bulletL, x, y, null);
+                break;
+            case UP:
+                g.drawImage(ResourceMgr.bulletU, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(ResourceMgr.bulletR, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(ResourceMgr.bulletD, x, y, null);
+                break;
+        }
         // 移动子弹
         move();
     }
