@@ -90,4 +90,28 @@ public class Bullet {
 
     }
 
+    /**
+     * 检测子弹是否与坦克发生了碰撞
+     * 碰撞了的话需要从界面上移除坦克与子弹
+     * @param tank
+     */
+    public void collideWith(Tank tank) {
+        // 矩形的位置与大小
+        Rectangle b = new Rectangle(this.x, this.y, Bullet.WIDTH, Bullet.HEIGHT);
+        Rectangle t = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);
+
+         // intersects 横断;相交;交叉;横穿;贯穿
+        if(b.intersects(t)){
+            // 设置living属性为false 下次执行paint方法时 不再画图形
+            this.die();
+            tank.die();
+        }
+    }
+
+    /**
+     * 子弹消亡
+     */
+    public void die() {
+        this.living = false;
+    }
 }

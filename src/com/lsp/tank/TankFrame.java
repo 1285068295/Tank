@@ -97,16 +97,22 @@ public class TankFrame extends Frame {
 
         myTank.paint(g);
         // 所有的子弹都一样  使用普通循环删除处理即可
-        long t1 = System.currentTimeMillis();
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(g);
         }
-        long t2 = System.currentTimeMillis();
-        System.out.println("画出子弹需要时间为"+ (t2 - t1));
 
         // 画出敌人坦克
         for (int i = 0; i < tanks.size(); i++) {
             tanks.get(i).paint(g);
+        }
+
+
+        // 检测坦克与子弹是否碰撞了  碰撞后要移除子弹和坦克
+        for (int i = 0; i < bullets.size(); i++) {
+            for (int j = 0; j < tanks.size(); j++) {
+                // 检测子弹是否与坦克碰撞了
+                bullets.get(i).collideWith(tanks.get(j));
+            }
         }
 
     }

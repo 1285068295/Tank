@@ -15,6 +15,9 @@ public class Tank {
     public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
 
 
+    /**坦克是否还存活 默认存活的 */
+    private boolean living = true;
+
     /**
      * 坦克的位置坐标
      */
@@ -101,6 +104,9 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
+        if(!living) {
+            tf.tanks.remove(this);
+        }
         // 根据方向画出坦克
         switch (dir) {
             case LEFT:
@@ -158,5 +164,12 @@ public class Tank {
 
 
         tf.bullets.add( new Bullet(bX, bY, this.dir, this.tf));
+    }
+
+    /**
+     * 坦克消亡
+     */
+    public void die() {
+        this.living = false;
     }
 }
