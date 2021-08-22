@@ -6,6 +6,9 @@ package com.lsp.tank;
  * @version: V1.0
  * @slogan:
  * @description :
+ *
+ * 游戏的主入口文件
+ *
  */
 public class Main {
 
