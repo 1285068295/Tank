@@ -38,8 +38,9 @@ public class Explode {
         this.x = x;
         this.y = y;
         this.tf = tf;
-
-        new Audio("audio/explode.wav").run();
+        // 播放爆炸声音
+        // 如果再主线程进行加载播放声音 会造成页面卡顿现象
+        new Thread(()->new Audio("audio/explode.wav").play()).start();
 
     }
 

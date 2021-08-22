@@ -122,8 +122,17 @@ public class Tank {
         // 敌人的坦克时随机的发射炮弹
         if (this.group.equals(Group.BAD) && Math.random() > 0.95) {
             fire();
+            randomDir();
         }
 
+    }
+
+    /**
+     * 随机改变移动的方向
+     */
+    private void randomDir() {
+        // 返回所有可能值的数组
+        this.dir = Dir.values()[(int) Math.random() * (Dir.values().length)];
     }
 
     public void paint(Graphics g) {

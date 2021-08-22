@@ -117,6 +117,8 @@ public class Bullet {
             // 设置living属性为false 下次执行paint方法时 不再画图形
             this.die();
             tank.die();
+            // 发生了碰撞 就创建一个新的爆炸
+            tf.explodes.add(new Explode(x, y, tf));
         }
     }
 

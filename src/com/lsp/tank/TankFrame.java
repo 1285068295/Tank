@@ -19,11 +19,6 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
 
-    /**
-     * 爆炸显示
-     */
-    Explode e = new Explode(100,200,this);
-
     /** 创建一个单人的坦克 */
     Tank myTank = new Tank(200, 400, Dir.RIGHT, Group.GOOD, this);
     /** 创建坦克子弹容器 */
@@ -31,6 +26,10 @@ public class TankFrame extends Frame {
 
     /** 创建敌人坦克容器 */
     List<Tank> tanks = new ArrayList<>();
+
+    /** 爆炸集合 */
+    List<Explode> explodes = new ArrayList<>();
+
 
     /** 游戏界面的大小*/
     static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
@@ -96,7 +95,9 @@ public class TankFrame extends Frame {
 
         Color c = g.getColor();
         g.setColor(Color.WHITE);
-        g.drawString("子弹数量为:" + bullets.size(), 10,60);
+        g.drawString("坦克数量为:" + tanks.size(), 10,60);
+        g.drawString("子弹数量为:" + bullets.size(), 10,80);
+        g.drawString("爆炸数量为:" + explodes.size(), 10,100);
         g.setColor(c);
 
         myTank.paint(g);
@@ -114,13 +115,17 @@ public class TankFrame extends Frame {
         // 检测坦克与子弹是否碰撞了  碰撞后要移除子弹和坦克
         for (int i = 0; i < bullets.size(); i++) {
             for (int j = 0; j < tanks.size(); j++) {
-                // 检测子弹是否与坦克碰撞了
+                // 检测子弹是否与坦克碰撞了 添加爆炸
                 bullets.get(i).collideWith(tanks.get(j));
             }
         }
 
+        // 画出爆炸图
+        for (int i = 0; i < explodes.size(); i++) {
+            explodes.get(i).paint(g);
 
-        e.paint(g);
+        }
+
     }
 
 
