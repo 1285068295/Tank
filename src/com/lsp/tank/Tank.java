@@ -1,6 +1,7 @@
 package com.lsp.tank;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Tank {
     /**
@@ -14,7 +15,7 @@ public class Tank {
     /**
      * 敌人移动和发射炮弹都需要是随机的
      */
-    //private Random random = new Random();
+    private Random random = new Random();
 
 
 
@@ -120,38 +121,37 @@ public class Tank {
                 break;
         }
         // 敌人的坦克时随机的发射炮弹
-        if (this.group.equals(Group.BAD) && Math.random() > 0.95) {
+        if (this.group.equals(Group.BAD) && random.nextInt(100) > 95) {
             fire();
             randomDir();
         }
-
     }
 
     /**
      * 随机改变移动的方向
      */
     private void randomDir() {
-        // 返回所有可能值的数组
-        this.dir = Dir.values()[(int) Math.random() * (Dir.values().length)];
+        // Dir.values() 返回所有可能值的数组
+        this.dir = Dir.values()[random.nextInt(4)];
     }
 
     public void paint(Graphics g) {
         if(!living) {
             tf.tanks.remove(this);
         }
-        // 根据方向画出坦克
+        // 根据方向画出坦克 根据敌我坦克画出不同的坦克
         switch (dir) {
             case LEFT:
-                g.drawImage(ResourceMgr.goodTankL, x, y, null);
+                g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankL : ResourceMgr.badTankL, x, y, null);
                 break;
             case UP:
-                g.drawImage(ResourceMgr.goodTankU, x, y, null);
+                g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankU : ResourceMgr.badTankU, x, y, null);
                 break;
             case RIGHT:
-                g.drawImage(ResourceMgr.goodTankR, x, y, null);
+                g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankR : ResourceMgr.badTankR, x, y, null);
                 break;
             case DOWN:
-                g.drawImage(ResourceMgr.goodTankD, x, y, null);
+                g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankD : ResourceMgr.badTankD, x, y, null);
                 break;
         }
         if (!moving) {

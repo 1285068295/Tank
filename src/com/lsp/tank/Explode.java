@@ -41,7 +41,6 @@ public class Explode {
         // 播放爆炸声音
         // 如果再主线程进行加载播放声音 会造成页面卡顿现象
         new Thread(()->new Audio("audio/explode.wav").play()).start();
-
     }
 
     /**
@@ -50,7 +49,7 @@ public class Explode {
     public void paint(Graphics g) {
         g.drawImage(ResourceMgr.explodes[step++], this.x, this.y, null);
         if (step == ResourceMgr.explodes.length) {
-            step = 0;
+           this.tf.explodes.remove(this);
         }
 
     }

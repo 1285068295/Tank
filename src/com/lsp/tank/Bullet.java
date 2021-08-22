@@ -118,7 +118,9 @@ public class Bullet {
             this.die();
             tank.die();
             // 发生了碰撞 就创建一个新的爆炸
-            tf.explodes.add(new Explode(x, y, tf));
+            int eX = tank.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2;
+            int eY = tank.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2;
+            tf.explodes.add(new Explode(eX, eY, tf));
         }
     }
 
