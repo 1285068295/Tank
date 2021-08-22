@@ -25,13 +25,19 @@ public class Bullet {
      * 子弹的速度
      * 注意需要于坦克的速度有差值 如果相同则同时移动时看不出来是否发射了子弹
      */
-    private static final int SPEED = 4;
+    private static final int SPEED = 15;
     /** 子弹为圆形 外切正方形的长和宽的大小*/
     public static int WIDTH = ResourceMgr.bulletU.getWidth();
     public static int HEIGHT = ResourceMgr.bulletU.getHeight();
 
     /**子弹是否还存活 默认存活的 */
     private boolean living = true;
+
+    /**
+     * 碰撞检测使用  只需要用一个就行  减少内存占用
+     * 每次移动后更行rect的坐标
+     */
+    Rectangle rect = new Rectangle();
 
     /**
      * 子弹位置
@@ -46,6 +52,11 @@ public class Bullet {
         this.dir = dir;
         this.group = group;
         this.tf = tf;
+        // 初始化用来检测碰撞的Rectangle
+        rect.x = this.x;
+        rect.y = this.y;
+        rect.width = WIDTH;
+        rect.height = HEIGHT;
     }
 
     public void paint(Graphics g){
@@ -91,6 +102,10 @@ public class Bullet {
             default:
                 break;
         }
+
+        // 更新碰撞检测的矩形
+        rect.x = this.x;
+        rect.y = this.y;
         // 移动越界的时候需要删除子弹  页面不再显示
         if(x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT){
             living = false;
@@ -106,14 +121,8 @@ public class Bullet {
     public void collideWith(Tank tank) {
         // 敌人的坦克与敌人的子弹不做碰撞检测
         if (this.group == tank.getGroup()) {return;}
-
-
-        // 矩形的位置与大小
-        Rectangle b = new Rectangle(this.x, this.y, Bullet.WIDTH, Bullet.HEIGHT);
-        Rectangle t = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);
-
          // intersects 横断;相交;交叉;横穿;贯穿
-        if(b.intersects(t)){
+        if(rect.intersects(tank.rect)){
             // 设置living属性为false 下次执行paint方法时 不再画图形
             this.die();
             tank.die();

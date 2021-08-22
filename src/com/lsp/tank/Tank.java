@@ -11,13 +11,17 @@ public class Tank {
     /**
      * 坦克的速度
      */
-    private static final int SPEED = 2;
+    private static final int SPEED = 10;
     /**
      * 敌人移动和发射炮弹都需要是随机的
      */
     private Random random = new Random();
 
-
+    /**
+     * 碰撞检测使用  只需要用一个就行  减少内存占用
+     * 每次移动后更行rect的坐标
+     */
+    Rectangle rect = new Rectangle();
 
     /**
      * 坦克的大小 图片是 60*60
@@ -56,6 +60,12 @@ public class Tank {
 		this.dir = dir;
 		this.group = group;
 		this.tf = tf;
+
+		// 初始化用来检测碰撞的Rectangle
+        rect.x = this.x;
+        rect.y = this.y;
+        rect.width = WIDTH;
+        rect.height = HEIGHT;
 	}
 
     public int getX() {
@@ -103,6 +113,13 @@ public class Tank {
      * 移动
      */
     private void move() {
+        if (!living) {
+            return;
+        }
+
+        if (!moving) {
+            return;
+        }
         switch (dir) {
             case LEFT:
                 // 这里修改x值之后，在下次调用paint方法时 调用fillRect实现坦克的移动
@@ -120,12 +137,41 @@ public class Tank {
             default:
                 break;
         }
+
+
         // 敌人的坦克时随机的发射炮弹
         if (this.group.equals(Group.BAD) && random.nextInt(100) > 95) {
             fire();
             randomDir();
         }
+        // 进行边界检测
+        boundsCheck();
+
+
+        // 更新碰撞检测的矩形
+        rect.x = this.x;
+        rect.y = this.y;
     }
+
+
+    /**
+     * 边界检测
+     */
+    private void boundsCheck() {
+        if (this.x < 2) {
+            x = 2;
+        }
+        if (this.y < 28) {
+            y = 28;
+        }
+        if (this.x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) {
+            x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
+        }
+        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) {
+            y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
+        }
+    }
+
 
     /**
      * 随机改变移动的方向

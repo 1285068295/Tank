@@ -21,6 +21,7 @@ public class TankFrame extends Frame {
 
     /** 创建一个单人的坦克 */
     Tank myTank = new Tank(200, 400, Dir.RIGHT, Group.GOOD, this);
+
     /** 创建坦克子弹容器 */
     List<Bullet> bullets = new ArrayList<>();
 
