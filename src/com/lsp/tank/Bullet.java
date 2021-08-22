@@ -10,10 +10,17 @@ import java.awt.*;
  * @description :坦克子弹
  */
 public class Bullet {
+
     /**
      * 游戏窗口引用
      */
     private TankFrame tf;
+
+
+    /**
+     * 默认是敌人的子弹
+     */
+    private Group group = Group.BAD;
     /**
      * 子弹的速度
      * 注意需要于坦克的速度有差值 如果相同则同时移动时看不出来是否发射了子弹
@@ -33,10 +40,11 @@ public class Bullet {
     /** 子弹方向*/
     private Dir dir;
 
-    public Bullet(int x, int y, Dir dir, TankFrame tf) {
+    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.group = group;
         this.tf = tf;
     }
 
@@ -96,6 +104,10 @@ public class Bullet {
      * @param tank
      */
     public void collideWith(Tank tank) {
+        // 敌人的坦克与敌人的子弹不做碰撞检测
+        if (this.group == tank.getGroup()) {return;}
+
+
         // 矩形的位置与大小
         Rectangle b = new Rectangle(this.x, this.y, Bullet.WIDTH, Bullet.HEIGHT);
         Rectangle t = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);

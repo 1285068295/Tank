@@ -13,9 +13,10 @@ public class Main {
         // 窗口类
         TankFrame tf = new TankFrame();
 
+        // 创建敌人坦克
         for (int i = 0; i < 5; i++) {
 
-            tf.tanks.add(new Tank(100+i*100 ,200, Dir.DOWN,tf));
+            tf.tanks.add(new Tank(100 + i * 100, 200, Dir.DOWN, Group.BAD, tf));
         }
 
 

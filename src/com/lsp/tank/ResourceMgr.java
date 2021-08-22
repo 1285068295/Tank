@@ -8,9 +8,21 @@ import java.io.IOException;
  * 管理资源 把图片加入到内存中 使用时直接用不需要再从硬盘读取了
  */
 public class ResourceMgr {
+	/**
+	 * 我的坦克的四个方向
+	 */
 	public static BufferedImage goodTankL, goodTankU, goodTankR, goodTankD;
+	/**
+	 * 敌人坦克的四个方向
+	 */
 	public static BufferedImage badTankL, badTankU, badTankR, badTankD;
+	/**
+	 * 炮弹的四个方向
+	 */
 	public static BufferedImage bulletL, bulletU, bulletR, bulletD;
+	/**
+	 * 爆炸的16张图片 爆炸处理显示原理是 将16张图片 按顺序输出到屏幕上
+	 */
 	public static BufferedImage[] explodes = new BufferedImage[16];
 	
  	

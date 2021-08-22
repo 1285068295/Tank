@@ -4,9 +4,19 @@ import java.awt.*;
 
 public class Tank {
     /**
+     * 默认是敌人的坦克
+     */
+    private Group group = Group.BAD;
+    /**
      * 坦克的速度
      */
     private static final int SPEED = 2;
+    /**
+     * 敌人移动和发射炮弹都需要是随机的
+     */
+    //private Random random = new Random();
+
+
 
     /**
      * 坦克的大小 图片是 60*60
@@ -29,7 +39,7 @@ public class Tank {
     /**
      * 是否移动坦克 只有在按下上下左右键时才移动坦克
      */
-    private boolean moving = false;
+    private boolean moving = true;
 
     /**
      * 游戏窗口引用
@@ -39,10 +49,11 @@ public class Tank {
     /**
      * 构造方法创建坦克时默认设置方向为向右
      */
-	public Tank(int x, int y, Dir dir, TankFrame tf) {
+	public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
+		this.group = group;
 		this.tf = tf;
 	}
 
@@ -68,6 +79,14 @@ public class Tank {
 
     public void setDir(Dir dir) {
         this.dir = dir;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public boolean isMoving() {
@@ -99,6 +118,10 @@ public class Tank {
                 break;
             default:
                 break;
+        }
+        // 敌人的坦克时随机的发射炮弹
+        if (this.group.equals(Group.BAD) && Math.random() > 0.95) {
+            fire();
         }
 
     }
@@ -135,7 +158,6 @@ public class Tank {
     public void fire() {
         // 子弹打出的初始位置为坦克的正中心
         // 需要计算出子弹图片左上角的位置所以要减去图片一半长宽
-
         int bX = this.x;
         int bY = this.y;
         switch (dir) {
@@ -159,11 +181,8 @@ public class Tank {
             default:
                 break;
         }
-
-
-
-
-        tf.bullets.add( new Bullet(bX, bY, this.dir, this.tf));
+        // 坦克创建子弹时  需要把敌我分类传入进去
+        tf.bullets.add(new Bullet(bX, bY, this.dir, this.group, this.tf));
     }
 
     /**
