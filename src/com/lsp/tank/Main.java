@@ -13,6 +13,11 @@ public class Main {
         // 窗口类
         TankFrame tf = new TankFrame();
 
+
+
+
+
+
         // 创建敌人坦克
         for (int i = 0; i < 5; i++) {
 

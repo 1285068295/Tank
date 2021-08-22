@@ -19,6 +19,10 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
 
+    /**
+     * 爆炸显示
+     */
+    Explode e = new Explode(100,200,this);
 
     /** 创建一个单人的坦克 */
     Tank myTank = new Tank(200, 400, Dir.RIGHT, Group.GOOD, this);
@@ -115,6 +119,8 @@ public class TankFrame extends Frame {
             }
         }
 
+
+        e.paint(g);
     }
 
 
