@@ -78,8 +78,7 @@ public class Tank extends BaseTank {
             // 配置文件加载  灵活性更强
             String goodFS = (String) PropertyMgr.get("goodFS");
             try {
-//                this.fireStrategy = (FourDirFireStrategy) Class.forName(goodFS).getConstructor().newInstance();
-                this.fireStrategy = new DefaultFireStrategy();
+                this.fireStrategy = (FourDirFireStrategy) Class.forName(goodFS).getConstructor().newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -242,7 +241,7 @@ public class Tank extends BaseTank {
         if (!moving) {
             return;
         }
-        if (Group.GOOD == this.group){move();}
+        move();
     }
 
 

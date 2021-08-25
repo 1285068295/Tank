@@ -17,7 +17,7 @@ public class Main {
         TankFrame tf = new TankFrame();
 
         // 创建敌人坦克
-        for (int i = 0; i <1; i++) {
+        for (int i = 0; i <10; i++) {
             tf.tanks.add(tf.gameFactory.createTank(100 + i * 100, 200, Dir.DOWN, Group.BAD, tf));
         }
 
