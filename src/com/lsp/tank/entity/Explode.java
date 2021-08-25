@@ -1,4 +1,6 @@
-package com.lsp.tank;
+package com.lsp.tank.entity;
+
+import com.lsp.tank.entity.abstractFactory.BaseExplode;
 
 import java.awt.*;
 
@@ -9,7 +11,7 @@ import java.awt.*;
  * @slogan:
  * @description :
  */
-public class Explode {
+public class Explode extends BaseExplode {
 
 
     /**
@@ -34,6 +36,12 @@ public class Explode {
      */
     private TankFrame tf;
 
+
+    /**
+     * 必须要提供空空参的构造方法
+     */
+    public Explode() { }
+
     public Explode(int x, int y, TankFrame tf) {
         this.x = x;
         this.y = y;
@@ -43,9 +51,12 @@ public class Explode {
         new Thread(()->new Audio("audio/explode.wav").play()).start();
     }
 
+
+
     /**
      * 画出爆炸图片
      */
+    @Override
     public void paint(Graphics g) {
         g.drawImage(ResourceMgr.explodes[step++], this.x, this.y, null);
         if (step == ResourceMgr.explodes.length) {

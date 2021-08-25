@@ -1,5 +1,7 @@
-package com.lsp.tank;
+package com.lsp.tank.entity;
 
+
+import com.lsp.tank.entity.abstractFactory.*;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -19,21 +21,28 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
 
+    /**
+     * 游戏工厂可以创建坦克 子弹  爆炸
+     * 方形爆炸 方向炮弹 RectFactory DefaultFactory
+     * 这里只用切换了factory 会切换一整套的ui
+     */
+    public GameFactory gameFactory = new DefaultFactory();
+
     /** 创建一个单人的坦克 */
     Tank myTank = new Tank(200, 400, Dir.RIGHT, Group.GOOD, this);
 
     /** 创建坦克子弹容器 */
-    List<Bullet> bullets = new ArrayList<>();
+    public List<BaseBullet> bullets = new ArrayList<>();
 
     /** 创建敌人坦克容器 */
-    List<Tank> tanks = new ArrayList<>();
+    public List<BaseTank> tanks = new ArrayList<>();
 
     /** 爆炸集合 */
-    List<Explode> explodes = new ArrayList<>();
+    public List<BaseExplode> explodes = new ArrayList<>();
 
 
     /** 游戏界面的大小*/
-    static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
+    public static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
 
 
     /**
@@ -231,13 +240,13 @@ public class TankFrame extends Frame {
                 return;
             }
             Dir dir =  moveDir.getLast();
-            if (dir.equals(Dir.LEFT)) {
+            if (dir==Dir.LEFT) {
                 myTank.setDir(Dir.LEFT);
-            } else if (dir.equals(Dir.RIGHT)) {
+            } else if (dir==Dir.RIGHT) {
                 myTank.setDir(Dir.RIGHT);
-            } else if (dir.equals(Dir.UP)) {
+            } else if (dir==Dir.UP) {
                 myTank.setDir(Dir.UP);
-            } else if (dir.equals(Dir.DOWN)) {
+            } else if (dir==Dir.DOWN) {
                 myTank.setDir(Dir.DOWN);
             }
         }

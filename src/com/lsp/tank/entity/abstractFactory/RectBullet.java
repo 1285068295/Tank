@@ -1,4 +1,6 @@
-package com.lsp.tank;
+package com.lsp.tank.entity.abstractFactory;
+
+import com.lsp.tank.entity.*;
 
 import java.awt.*;
 
@@ -7,15 +9,14 @@ import java.awt.*;
  * @date： 2021/8/21
  * @version: V1.0
  * @slogan:
- * @description :坦克子弹
+ * @description :方形的坦克子弹
  */
-public class Bullet {
+public class RectBullet extends BaseBullet {
 
     /**
      * 游戏窗口引用
      */
     private TankFrame tf;
-
 
     /**
      * 默认是敌人的子弹
@@ -46,7 +47,7 @@ public class Bullet {
     /** 子弹方向*/
     private Dir dir;
 
-    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public RectBullet(int x, int y, Dir dir, Group group, TankFrame tf) {
         this.x = x;
         this.y = y;
         this.dir = dir;
@@ -57,30 +58,23 @@ public class Bullet {
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
+
+        // 在创建的同时加入到tf的子弹即可中  就不需要在new 方法之外单独做bullets.add操作了
+        tf.bullets.add(this);
     }
 
+    @Override
     public void paint(Graphics g){
-        if(!living) {
+        if (!living) {
             tf.bullets.remove(this);
         }
-        switch(dir) {
-            case LEFT:
-                g.drawImage(ResourceMgr.bulletL, x, y, null);
-                break;
-            case UP:
-                g.drawImage(ResourceMgr.bulletU, x, y, null);
-                break;
-            case RIGHT:
-                g.drawImage(ResourceMgr.bulletR, x, y, null);
-                break;
-            case DOWN:
-                g.drawImage(ResourceMgr.bulletD, x, y, null);
-                break;
-        }
+        Color c = g.getColor();
+        g.setColor(Color.YELLOW);
+        g.fillRect(x,y,20,20);
+        g.setColor(c);
         // 移动子弹
         move();
     }
-
     /**
      * 移动
      */
@@ -115,13 +109,19 @@ public class Bullet {
 
     /**
      * 检测子弹是否与坦克发生了碰撞
-     * 碰撞了的话需要从界面上移除坦克与子弹
+     * 碰撞了的话需要从界面上移除坦克与子弹  同时创建爆炸图片
      * @param tank
      */
-    public void collideWith(Tank tank) {
+    @Override
+    public void collideWith(BaseTank tank) {
         // 敌人的坦克与敌人的子弹不做碰撞检测
         if (this.group == tank.getGroup()) {return;}
          // intersects 横断;相交;交叉;横穿;贯穿
+        /**
+         * 踩坑点 父类和子类中都有rect属性时
+         * 参数传入的实参为RectTank 在获取tank.rect时 获取的是父类的rect属性
+         * 所以会已知不能发生碰撞
+         */
         if(rect.intersects(tank.rect)){
             // 设置living属性为false 下次执行paint方法时 不再画图形
             this.die();
@@ -129,7 +129,7 @@ public class Bullet {
             // 发生了碰撞 就创建一个新的爆炸
             int eX = tank.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2;
             int eY = tank.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2;
-            tf.explodes.add(new Explode(eX, eY, tf));
+            tf.explodes.add(tf.gameFactory.createExplode(eX, eY, tf));
         }
     }
 

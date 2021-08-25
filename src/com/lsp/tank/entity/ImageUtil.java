@@ -1,4 +1,4 @@
-package com.lsp.tank;
+package com.lsp.tank.entity;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

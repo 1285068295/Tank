@@ -1,5 +1,5 @@
 
-package com.lsp.tank;
+package com.lsp.tank.entity;
 
 import javax.sound.sampled.*;
 import java.io.IOException;

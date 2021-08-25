@@ -1,9 +1,11 @@
-package com.lsp.tank;
+package com.lsp.tank.entity;
+
+import com.lsp.tank.entity.abstractFactory.BaseTank;
 
 import java.awt.*;
 import java.util.Random;
 
-public class Tank {
+public class Tank extends BaseTank {
     /**
      * 默认是敌人的坦克
      */
@@ -21,7 +23,7 @@ public class Tank {
      * 碰撞检测使用  只需要用一个就行  减少内存占用
      * 每次移动后更行rect的坐标
      */
-    Rectangle rect = new Rectangle();
+    // public Rectangle rect = new Rectangle();
 
     /**
      * 坦克的大小 图片是 60*60
@@ -52,6 +54,11 @@ public class Tank {
     private TankFrame tf;
 
     /**
+     * 坦克开炮的策略模式
+     */
+    private FireStrategy fireStrategy;
+
+    /**
      * 构造方法创建坦克时默认设置方向为向右
      */
 	public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
@@ -66,22 +73,34 @@ public class Tank {
         rect.y = this.y;
         rect.width = WIDTH;
         rect.height = HEIGHT;
+
+        if (this.group == Group.GOOD) {
+            // 配置文件加载  灵活性更强
+            String goodFS = (String) PropertyMgr.get("goodFS");
+            try {
+//                this.fireStrategy = (FourDirFireStrategy) Class.forName(goodFS).getConstructor().newInstance();
+                this.fireStrategy = new DefaultFireStrategy();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            this.fireStrategy = new DefaultFireStrategy();
+        }
+
 	}
 
-    public int getX() {
-        return x;
+    public FireStrategy getFireStrategy() {
+        return fireStrategy;
+    }
+    public void setFireStrategy(FireStrategy fireStrategy) {
+        this.fireStrategy = fireStrategy;
+    }
+    public boolean isMoving() {
+        return moving;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     public Dir getDir() {
@@ -100,14 +119,29 @@ public class Tank {
         this.group = group;
     }
 
-    public boolean isMoving() {
-        return moving;
+    public int getX() {
+        return x;
     }
 
-    public void setMoving(boolean moving) {
-        this.moving = moving;
+    public void setX(int x) {
+        this.x = x;
     }
 
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public TankFrame getTf() {
+        return tf;
+    }
+
+    public void setTf(TankFrame tf) {
+        this.tf = tf;
+    }
 
     /**
      * 移动
@@ -138,15 +172,19 @@ public class Tank {
                 break;
         }
 
+        if(this.group == Group.GOOD){
+            // 我的坦克发射炮弹要发出音乐
+            // new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
+        }
+
 
         // 敌人的坦克时随机的发射炮弹
-        if (this.group.equals(Group.BAD) && random.nextInt(100) > 95) {
+        if ((this.group==Group.BAD) && random.nextInt(100) > 95) {
             fire();
             randomDir();
         }
         // 进行边界检测
         boundsCheck();
-
 
         // 更新碰撞检测的矩形
         rect.x = this.x;
@@ -181,6 +219,7 @@ public class Tank {
         this.dir = Dir.values()[random.nextInt(4)];
     }
 
+    @Override
     public void paint(Graphics g) {
         if(!living) {
             tf.tanks.remove(this);
@@ -203,46 +242,25 @@ public class Tank {
         if (!moving) {
             return;
         }
-        move();
+        if (Group.GOOD == this.group){move();}
     }
 
 
     /**
      * 发射子弹
+     * 有两种方式
+     * 1 用参数的方式传进来  这种方式缺点是每次调用都需要new因此需要把策略设计成单例的
+     * 2 使用成员变量，一般情况下不用成员变量 传参数会使得类结构复杂
+     *   这里我们使用成员变量的方式来解决
      */
     public void fire() {
-        // 子弹打出的初始位置为坦克的正中心
-        // 需要计算出子弹图片左上角的位置所以要减去图片一半长宽
-        int bX = this.x;
-        int bY = this.y;
-        switch (dir) {
-            case LEFT:
-                // 了让子弹贴住炮筒
-                bX = bX - Bullet.WIDTH;
-                bY = bY + Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-                break;
-            case RIGHT:
-                bX += Tank.WIDTH;
-                bY += Tank.HEIGHT / 2 - Bullet.HEIGHT / 2;
-                break;
-            case UP:
-                bX = bX + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
-                bY = bY - Bullet.HEIGHT;
-                break;
-            case DOWN:
-                bX = bX + Tank.WIDTH / 2 - Bullet.WIDTH / 2;
-                bY = bY + Tank.HEIGHT;
-                break;
-            default:
-                break;
-        }
-        // 坦克创建子弹时  需要把敌我分类传入进去
-        tf.bullets.add(new Bullet(bX, bY, this.dir, this.group, this.tf));
+        fireStrategy.fire(this);
     }
 
     /**
      * 坦克消亡
      */
+    @Override
     public void die() {
         this.living = false;
     }

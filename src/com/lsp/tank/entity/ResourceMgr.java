@@ -1,4 +1,4 @@
-package com.lsp.tank;
+package com.lsp.tank.entity;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
