@@ -1,6 +1,7 @@
 package com.lsp.tank.entity.abstractFactory;
 
 import com.lsp.tank.entity.Explode;
+import com.lsp.tank.entity.GameModel;
 import com.lsp.tank.entity.ResourceMgr;
 import com.lsp.tank.entity.TankFrame;
 
@@ -39,10 +40,10 @@ public class RectExplode extends Explode {
     /**
      * 注意父类必须要有空参构造方法
      */
-    public RectExplode(int x, int y, TankFrame tf) {
+    public RectExplode(int x, int y, GameModel gameModel) {
         this.x = x;
         this.y = y;
-        this.tf = tf;
+        this.gameModel = gameModel;
         // 播放爆炸声音
         // 如果再主线程进行加载播放声音 会造成页面卡顿现象
         // new Thread(()->new Audio("audio/explode.wav").play()).start();
@@ -58,7 +59,7 @@ public class RectExplode extends Explode {
         g.fillRect(x,y,10*step,10*step);
         step++;
         if (step >= 5) {
-            this.tf.explodes.remove(this);
+            this.gameModel.explodes.remove(this);
         }
 
     }

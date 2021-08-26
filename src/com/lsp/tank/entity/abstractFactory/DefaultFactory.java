@@ -11,17 +11,17 @@ import com.lsp.tank.entity.*;
  */
 public class DefaultFactory extends GameFactory {
     @Override
-    public BaseTank createTank(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
-        return new Tank(x, y, dir, group, tankFrame);
+    public BaseTank createTank(int x, int y, Dir dir, Group group, GameModel gameModel) {
+        return new Tank(x, y, dir, group, gameModel);
     }
 
     @Override
-    public BaseBullet createBullet(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
-        return new Bullet(x, y, dir, group, tankFrame);
+    public BaseBullet createBullet(int x, int y, Dir dir, Group group, GameModel gameModel) {
+        return new Bullet(x, y, dir, group, gameModel);
     }
 
     @Override
-    public BaseExplode createExplode(int x, int y, TankFrame tankFrame) {
-        return new Explode(x, y,tankFrame);
+    public BaseExplode createExplode(int x, int y, GameModel gameModel) {
+        return new Explode(x, y,gameModel);
     }
 }

@@ -1,5 +1,7 @@
 package com.lsp.tank.entity.abstractFactory;
 
+import com.lsp.tank.entity.GameModel;
+
 import java.awt.*;
 
 /**
@@ -11,6 +13,12 @@ import java.awt.*;
  * 在抽取父类的时候 用到哪个就抽取哪个 不要一下子全抽出来
  */
 public abstract class BaseExplode {
+
+    /**
+     * model层
+     */
+    public GameModel gameModel;
+
     /**
      * 画图方法
      */

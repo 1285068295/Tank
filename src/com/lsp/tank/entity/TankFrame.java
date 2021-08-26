@@ -1,16 +1,16 @@
 package com.lsp.tank.entity;
 
 
-import com.lsp.tank.entity.abstractFactory.*;
+import com.lsp.tank.entity.abstractFactory.BaseTank;
+import com.lsp.tank.entity.abstractFactory.DefaultFactory;
+import com.lsp.tank.entity.abstractFactory.GameFactory;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author ：Lisp
@@ -21,39 +21,18 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
 
+    /** 游戏界面的大小*/
+    public static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
+
+    public GameModel gameModel = new GameModel();
+
+
     /**
      * 游戏工厂可以创建坦克 子弹  爆炸
      * 方形爆炸 方向炮弹 RectFactory DefaultFactory
      * 这里只用切换了factory 会切换一整套的ui
      */
     public GameFactory gameFactory = new DefaultFactory();
-
-    /** 创建一个单人的坦克 */
-    Tank myTank = new Tank(200, 400, Dir.RIGHT, Group.GOOD, this);
-
-    /** 创建坦克子弹容器 */
-    public List<BaseBullet> bullets = new ArrayList<>();
-
-    /** 创建敌人坦克容器 */
-    public List<BaseTank> tanks = new ArrayList<>();
-
-    /** 爆炸集合 */
-    public List<BaseExplode> explodes = new ArrayList<>();
-
-
-    /** 游戏界面的大小*/
-    public static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
-
-
-    /**
-     * 用来存储按下的方向四个键，当同时按下多个键时，以最后一次的按键为主
-     * 每松开一个键就从栈中弹出一个数据，所以栈中最多存4个按键数据
-     *
-     * 注意 不能用stack来存储  释放按键时是无序释放的
-     * →↓←
-     */
-    LinkedList<Dir> moveDir = new LinkedList<>();
-
 
     public TankFrame() {
         setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -102,40 +81,7 @@ public class TankFrame extends Frame {
      */
     @Override
     public void paint(Graphics g) {
-
-        Color c = g.getColor();
-        g.setColor(Color.WHITE);
-        g.drawString("坦克数量为:" + tanks.size(), 10,60);
-        g.drawString("子弹数量为:" + bullets.size(), 10,80);
-        g.drawString("爆炸数量为:" + explodes.size(), 10,100);
-        g.setColor(c);
-
-        myTank.paint(g);
-        // 所有的子弹都一样  使用普通循环删除处理即可
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).paint(g);
-        }
-
-        // 画出敌人坦克
-        for (int i = 0; i < tanks.size(); i++) {
-            tanks.get(i).paint(g);
-        }
-
-
-        // 检测坦克与子弹是否碰撞了  碰撞后要移除子弹和坦克
-        for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < tanks.size(); j++) {
-                // 检测子弹是否与坦克碰撞了 添加爆炸
-                bullets.get(i).collideWith(tanks.get(j));
-            }
-        }
-
-        // 画出爆炸图
-        for (int i = 0; i < explodes.size(); i++) {
-            explodes.get(i).paint(g);
-
-        }
-
+       gameModel.paint(g);
     }
 
 
@@ -151,6 +97,16 @@ public class TankFrame extends Frame {
     class MyKeyListener extends KeyAdapter{
 
         /**
+         * 用来存储按下的方向四个键，当同时按下多个键时，以最后一次的按键为主
+         * 每松开一个键就从栈中弹出一个数据，所以栈中最多存4个按键数据
+         *
+         * 注意 不能用stack来存储  释放按键时是无序释放的
+         * →↓←
+         */
+        LinkedList<Dir> moveDir = new LinkedList<>();
+
+
+        /**
          * 按着键盘不松手时会产生多个key，但是同一个key我们应该只加入一次
          *
          * 只有上下左右四个按键处理方向
@@ -158,6 +114,7 @@ public class TankFrame extends Frame {
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
+            BaseTank myTank = gameModel.getMainTank();
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     if (!moveDir.contains(Dir.LEFT)) {
@@ -201,6 +158,7 @@ public class TankFrame extends Frame {
             // 松开键盘时不移动  只要有一个按键  坦克就应该处于移动状态
             // 必须判断四个键盘  因为存在按下两个键的情况 松开一个不能直接设置为false
             int key = e.getKeyCode();
+            BaseTank myTank = gameModel.getMainTank();
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     moveDir.remove(Dir.LEFT);
@@ -240,6 +198,7 @@ public class TankFrame extends Frame {
                 return;
             }
             Dir dir =  moveDir.getLast();
+            BaseTank myTank = gameModel.getMainTank();
             if (dir==Dir.LEFT) {
                 myTank.setDir(Dir.LEFT);
             } else if (dir==Dir.RIGHT) {

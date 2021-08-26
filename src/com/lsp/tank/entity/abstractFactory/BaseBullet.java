@@ -1,5 +1,7 @@
 package com.lsp.tank.entity.abstractFactory;
 
+import com.lsp.tank.entity.GameModel;
+
 import java.awt.*;
 
 /**
@@ -11,6 +13,11 @@ import java.awt.*;
  *              需要抽取哪个方法的时候再进行抽取
  */
 public abstract class BaseBullet {
+
+    /**
+     * model层引用
+     */
+    public GameModel gameModel;
 
     public abstract void paint(Graphics g);
 

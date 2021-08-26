@@ -15,9 +15,9 @@ import java.awt.*;
 public class Bullet extends BaseBullet {
 
     /**
-     * 游戏窗口引用
+     * model层
      */
-    private TankFrame tf;
+    public GameModel gameModel;
 
 
     /**
@@ -49,12 +49,12 @@ public class Bullet extends BaseBullet {
     /** 子弹方向*/
     private Dir dir;
 
-    public Bullet(int x, int y, Dir dir, Group group, TankFrame tf) {
+    public Bullet(int x, int y, Dir dir, Group group, GameModel gameModel) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.group = group;
-        this.tf = tf;
+        this.gameModel = gameModel;
         // 初始化用来检测碰撞的Rectangle
         rect.x = this.x;
         rect.y = this.y;
@@ -62,13 +62,13 @@ public class Bullet extends BaseBullet {
         rect.height = HEIGHT;
 
         // 在创建的同时加入到tf的子弹即可中  就不需要在new 方法之外单独做bullets.add操作了
-        tf.bullets.add(this);
+        gameModel.bullets.add(this);
     }
 
     @Override
     public void paint(Graphics g){
         if(!living) {
-            tf.bullets.remove(this);
+            gameModel.bullets.remove(this);
         }
         switch(dir) {
             case LEFT:
@@ -142,7 +142,7 @@ public class Bullet extends BaseBullet {
             // 发生了碰撞 就创建一个新的爆炸
             int eX = tank.getX() + Tank.WIDTH / 2 - Explode.WIDTH / 2;
             int eY = tank.getY() + Tank.HEIGHT / 2 - Explode.HEIGHT / 2;
-            tf.explodes.add(tf.gameFactory.createExplode(eX, eY, tf));
+            gameModel.explodes.add(gameModel.gameFactory.createExplode(eX, eY, gameModel));
         }
     }
 

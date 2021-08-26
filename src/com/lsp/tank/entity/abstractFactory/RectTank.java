@@ -61,7 +61,7 @@ public class RectTank extends BaseTank {
     /**
      * 构造方法创建坦克时默认设置方向为向右
      */
-	public RectTank(int x, int y, Dir dir, Group group, TankFrame tf) {
+	public RectTank(int x, int y, Dir dir, Group group, GameModel gameModel) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
@@ -88,45 +88,7 @@ public class RectTank extends BaseTank {
 
 	}
 
-    public int getX() {
-        return x;
-    }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public Dir getDir() {
-        return dir;
-    }
-
-    public void setDir(Dir dir) {
-        this.dir = dir;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public TankFrame getTf() {
-        return tf;
-    }
-
-    public void setTf(TankFrame tf) {
-        this.tf = tf;
-    }
 
     public FireStrategy getFireStrategy() {
         return fireStrategy;
@@ -134,14 +96,6 @@ public class RectTank extends BaseTank {
 
     public void setFireStrategy(FireStrategy fireStrategy) {
         this.fireStrategy = fireStrategy;
-    }
-
-    public boolean isMoving() {
-        return moving;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
     }
 
 
@@ -228,7 +182,7 @@ public class RectTank extends BaseTank {
     @Override
     public void paint(Graphics g) {
         if(!living) {
-            tf.tanks.remove(this);
+            tf.gameModel.tanks.remove(this);
         }
         Color c = g.getColor();
         g.setColor(Group.GOOD == this.group ? Color.BLUE:Color.WHITE);
@@ -248,6 +202,7 @@ public class RectTank extends BaseTank {
      * 2 使用成员变量，一般情况下不用成员变量 传参数会使得类结构复杂
      *   这里我们使用成员变量的方式来解决
      */
+    @Override
     public void fire() {
         fireStrategy.fire(this);
     }

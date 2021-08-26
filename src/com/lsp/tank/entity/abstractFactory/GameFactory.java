@@ -1,8 +1,8 @@
 package com.lsp.tank.entity.abstractFactory;
 
 import com.lsp.tank.entity.Dir;
+import com.lsp.tank.entity.GameModel;
 import com.lsp.tank.entity.Group;
-import com.lsp.tank.entity.TankFrame;
 
 /**
  * @author ：Lisp
@@ -20,10 +20,10 @@ public abstract class GameFactory {
      * @param y 坐标x
      * @param dir 方向
      * @param group 类别：敌人 友军
-     * @param tankFrame 游戏窗口
+     * @param gameModel model层
      * @return 坦克类
      */
-    public abstract BaseTank createTank(int x, int y, Dir dir, Group group, TankFrame tankFrame);
+    public abstract BaseTank createTank(int x, int y, Dir dir, Group group, GameModel gameModel);
 
 
     /**
@@ -32,18 +32,18 @@ public abstract class GameFactory {
      * @param y 坐标x
      * @param dir 方向
      * @param group 类别：敌人 友军
-     * @param tankFrame 游戏窗口
+     * @param gameModel model层
      * @return 子弹
      */
-    public abstract BaseBullet createBullet(int x, int y, Dir dir, Group group, TankFrame tankFrame);
+    public abstract BaseBullet createBullet(int x, int y, Dir dir, Group group, GameModel gameModel);
     /**
      * 创建爆炸方法
      * @param x 坐标x
      * @param x 坐标x
      * @param y 坐标x
-     * @param tankFrame 游戏窗口
+     * @param gameModel model层
      * @return 爆炸类
      */
-    public abstract BaseExplode createExplode(int x, int y, TankFrame tankFrame);
+    public abstract BaseExplode createExplode(int x, int y, GameModel gameModel);
 
 }

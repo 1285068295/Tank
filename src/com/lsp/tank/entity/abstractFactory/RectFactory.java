@@ -1,6 +1,7 @@
 package com.lsp.tank.entity.abstractFactory;
 
 import com.lsp.tank.entity.Dir;
+import com.lsp.tank.entity.GameModel;
 import com.lsp.tank.entity.Group;
 import com.lsp.tank.entity.TankFrame;
 
@@ -14,17 +15,17 @@ import com.lsp.tank.entity.TankFrame;
  */
 public class RectFactory extends GameFactory {
     @Override
-    public BaseTank createTank(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
-        return new RectTank(x,y,dir,group,tankFrame);
+    public BaseTank createTank(int x, int y, Dir dir, Group group, GameModel gameModel) {
+        return new RectTank(x,y,dir,group,gameModel);
     }
 
     @Override
-    public BaseBullet createBullet(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
-        return new RectBullet(x,y,dir,group,tankFrame);
+    public BaseBullet createBullet(int x, int y, Dir dir, Group group, GameModel gameModel) {
+        return new RectBullet(x,y,dir,group,gameModel);
     }
 
     @Override
-    public BaseExplode createExplode(int x, int y, TankFrame tankFrame) {
-        return new RectExplode(x, y, tankFrame);
+    public BaseExplode createExplode(int x, int y, GameModel gameModel) {
+        return new RectExplode(x, y, gameModel);
     }
 }

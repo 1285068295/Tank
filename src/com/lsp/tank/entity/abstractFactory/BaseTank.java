@@ -1,8 +1,8 @@
 package com.lsp.tank.entity.abstractFactory;
 
 import com.lsp.tank.entity.Dir;
+import com.lsp.tank.entity.GameModel;
 import com.lsp.tank.entity.Group;
-import com.lsp.tank.entity.TankFrame;
 
 import java.awt.*;
 
@@ -17,10 +17,12 @@ import java.awt.*;
  */
 public abstract class BaseTank {
 
+    public GameModel gameModel;
+
     /**
      * 默认是敌人的坦克
      */
-    private Group group = Group.BAD;
+    public Group group = Group.BAD;
     /**
      * 碰撞检测使用  只需要用一个就行  减少内存占用
      * 每次移动后更行rect的坐标
@@ -30,37 +32,60 @@ public abstract class BaseTank {
     /**
      * 坦克的位置坐标
      */
-    private int x, y;
+    public int x, y;
 
     /**
      * 坦克的朝向
      */
-    private Dir dir;
+    public Dir dir;
 
     /**
-     * 游戏窗口引用
+     * 是否移动坦克 只有在按下上下左右键时才移动坦克
      */
-    private TankFrame tf;
+    private boolean moving = true;
 
 
-    public abstract Group getGroup();
-    public abstract void setGroup(Group group);
+    public Group getGroup() {
+        return group;
+    }
 
-    public abstract int getX();
-    public abstract void setX(int x);
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 
-    public abstract int getY();
-    public abstract void setY(int y);
+    public int getX() {
+        return x;
+    }
 
+    public void setX(int x) {
+        this.x = x;
+    }
 
-    public abstract Dir getDir();
-    public abstract void setDir(Dir dir);
+    public int getY() {
+        return y;
+    }
 
-    public abstract TankFrame getTf();
+    public void setY(int y) {
+        this.y = y;
+    }
 
-    public abstract void setTf(TankFrame tf);
+    public Dir getDir() {
+        return dir;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
 
     public abstract void die();
     public abstract void paint(Graphics graphics);
-
+    public abstract void fire();
 }

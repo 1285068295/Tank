@@ -13,7 +13,6 @@ import java.awt.*;
  */
 public class Explode extends BaseExplode {
 
-
     /**
      * 爆炸的大小 图片是 60*60
      */
@@ -42,10 +41,10 @@ public class Explode extends BaseExplode {
      */
     public Explode() { }
 
-    public Explode(int x, int y, TankFrame tf) {
+    public Explode(int x, int y, GameModel gameModel) {
         this.x = x;
         this.y = y;
-        this.tf = tf;
+        this.gameModel = gameModel;
         // 播放爆炸声音
         // 如果再主线程进行加载播放声音 会造成页面卡顿现象
         new Thread(()->new Audio("audio/explode.wav").play()).start();
@@ -60,7 +59,7 @@ public class Explode extends BaseExplode {
     public void paint(Graphics g) {
         g.drawImage(ResourceMgr.explodes[step++], this.x, this.y, null);
         if (step == ResourceMgr.explodes.length) {
-           this.tf.explodes.remove(this);
+           this.gameModel.explodes.remove(this);
         }
 
     }

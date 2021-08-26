@@ -6,10 +6,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class Tank extends BaseTank {
-    /**
-     * 默认是敌人的坦克
-     */
-    private Group group = Group.BAD;
+
     /**
      * 坦克的速度
      */
@@ -36,24 +33,6 @@ public class Tank extends BaseTank {
     private boolean living = true;
 
     /**
-     * 坦克的位置坐标
-     */
-	private int x, y;
-    /**
-     * 坦克移动的方向
-     */
-	private Dir dir;
-    /**
-     * 是否移动坦克 只有在按下上下左右键时才移动坦克
-     */
-    private boolean moving = true;
-
-    /**
-     * 游戏窗口引用
-     */
-    private TankFrame tf;
-
-    /**
      * 坦克开炮的策略模式
      */
     private FireStrategy fireStrategy;
@@ -61,12 +40,12 @@ public class Tank extends BaseTank {
     /**
      * 构造方法创建坦克时默认设置方向为向右
      */
-	public Tank(int x, int y, Dir dir, Group group, TankFrame tf) {
+	public Tank(int x, int y, Dir dir, Group group, GameModel gameModel) {
 		this.x = x;
 		this.y = y;
 		this.dir = dir;
 		this.group = group;
-		this.tf = tf;
+		this.gameModel = gameModel;
 
 		// 初始化用来检测碰撞的Rectangle
         rect.x = this.x;
@@ -94,53 +73,6 @@ public class Tank extends BaseTank {
     public void setFireStrategy(FireStrategy fireStrategy) {
         this.fireStrategy = fireStrategy;
     }
-    public boolean isMoving() {
-        return moving;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
-    public Dir getDir() {
-        return dir;
-    }
-
-    public void setDir(Dir dir) {
-        this.dir = dir;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public TankFrame getTf() {
-        return tf;
-    }
-
-    public void setTf(TankFrame tf) {
-        this.tf = tf;
-    }
 
     /**
      * 移动
@@ -150,7 +82,7 @@ public class Tank extends BaseTank {
             return;
         }
 
-        if (!moving) {
+        if (!isMoving()) {
             return;
         }
         switch (dir) {
@@ -221,7 +153,7 @@ public class Tank extends BaseTank {
     @Override
     public void paint(Graphics g) {
         if(!living) {
-            tf.tanks.remove(this);
+            this.gameModel.tanks.remove(this);
         }
         // 根据方向画出坦克 根据敌我坦克画出不同的坦克
         switch (dir) {
@@ -238,7 +170,7 @@ public class Tank extends BaseTank {
                 g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankD : ResourceMgr.badTankD, x, y, null);
                 break;
         }
-        if (!moving) {
+        if (!isMoving()) {
             return;
         }
         move();
@@ -252,6 +184,7 @@ public class Tank extends BaseTank {
      * 2 使用成员变量，一般情况下不用成员变量 传参数会使得类结构复杂
      *   这里我们使用成员变量的方式来解决
      */
+    @Override
     public void fire() {
         fireStrategy.fire(this);
     }

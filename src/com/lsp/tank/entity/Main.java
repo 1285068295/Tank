@@ -16,11 +16,6 @@ public class Main {
         // 窗口类
         TankFrame tf = new TankFrame();
 
-        // 创建敌人坦克
-        for (int i = 0; i <10; i++) {
-            tf.tanks.add(tf.gameFactory.createTank(100 + i * 100, 200, Dir.DOWN, Group.BAD, tf));
-        }
-
 
         // 背景音乐  需要开启新的线程  因为loop是死循环
 //        new Thread(()->{

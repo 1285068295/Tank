@@ -39,7 +39,7 @@ public class ThreeBulletsFireStrategy implements FireStrategy {
                     break;
             }
             // 坦克创建子弹时  需要把敌我分类传入进去
-            new Bullet(bX, bY, t.getDir(), t.getGroup(), t.getTf());
+            new Bullet(bX, bY, t.getDir(), t.getGroup(), t.gameModel);
             if(t.getGroup() == Group.GOOD){
                 // 我的坦克发射炮弹要发出音乐
                 new Thread(()->new Audio("audio/tank_fire.wav").play()).start();

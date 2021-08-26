@@ -40,7 +40,7 @@ public class FourDirFireStrategy implements FireStrategy {
                     break;
             }
             // 坦克创建子弹时  需要把敌我分类传入进去
-           t.getTf().gameFactory.createBullet(bX, bY, dir, t.getGroup(), t.getTf());
+           t.gameModel.gameFactory.createBullet(bX, bY, dir, t.getGroup(), t.gameModel);
 
             // 声音先注释 后面优化成线程池处理
 //            if(t.getGroup() == Group.GOOD){
