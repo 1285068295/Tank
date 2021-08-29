@@ -8,5 +8,5 @@ package com.lsp.tank.entity;
  * @description :用来区分敌我坦克 敌我子弹
  */
 public enum Group {
-    GOOD, BAD
+    SELF, ENEMY
 }

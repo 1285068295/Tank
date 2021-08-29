@@ -1,188 +1,177 @@
 package com.lsp.tank.entity;
 
-import com.lsp.tank.entity.abstractFactory.BaseTank;
+import com.lsp.tank.entity.abstractEntity.BaseTank;
+import com.lsp.tank.mgr.PropertyMgr;
+import com.lsp.tank.mgr.ResourceMgr;
+import com.lsp.tank.strategy.FireStrategy;
 
 import java.awt.*;
-import java.util.Random;
+import java.awt.image.BufferedImage;
+import java.util.UUID;
 
-public class Tank extends BaseTank {
-
-    /**
-     * 坦克的速度
-     */
-    private static final int SPEED = 10;
-    /**
-     * 敌人移动和发射炮弹都需要是随机的
-     */
-    private Random random = new Random();
-
-    /**
-     * 碰撞检测使用  只需要用一个就行  减少内存占用
-     * 每次移动后更行rect的坐标
-     */
-    // public Rectangle rect = new Rectangle();
+/**
+ * @author ：Lisp
+ * @date： 2021/8/29
+ * @version: V1.0
+ * @slogan:
+ * @description :坦克父类
+ */
+public abstract class Tank extends BaseTank {
+    protected int speed = 10;
 
     /**
-     * 坦克的大小 图片是 60*60
+     * 碰撞检测使用  只需要new一个就行  减少内存占用
+     * 每次移动后更新rect的坐标
      */
-    public static int WIDTH = ResourceMgr.goodTankU.getWidth();
-    public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
-
-
-    /**坦克是否还存活 默认存活的 */
-    private boolean living = true;
+    protected Rectangle rect;
+    protected FireStrategy fireStrategy;
+    public Group group;
 
     /**
-     * 坦克开炮的策略模式
+     * 当前坦克加载的图片
      */
-    private FireStrategy fireStrategy;
+    public BufferedImage curTankImage;
+
+    public Tank(UUID id, int x, int y, Dir dir, int speed, Group group) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
+        this.speed = speed;
+        this.group = group;
+        initCurTankImage();
+        this.rect = new Rectangle();
+        updateRect();
+        if (group == Group.SELF) {
+            fireStrategy = PropertyMgr.getSelf_tank_fs();
+        } else {
+            fireStrategy = PropertyMgr.getEnemy_tank_fs();
+        }
+    }
 
     /**
-     * 构造方法创建坦克时默认设置方向为向右
+     * 初始化坦克时的图片
      */
-	public Tank(int x, int y, Dir dir, Group group, GameModel gameModel) {
-		this.x = x;
-		this.y = y;
-		this.dir = dir;
-		this.group = group;
-		this.gameModel = gameModel;
-
-		// 初始化用来检测碰撞的Rectangle
-        rect.x = this.x;
-        rect.y = this.y;
-        rect.width = WIDTH;
-        rect.height = HEIGHT;
-
-        if (this.group == Group.GOOD) {
-            // 配置文件加载  灵活性更强
-            String goodFS = (String) PropertyMgr.get("goodFS");
-            try {
-                this.fireStrategy = (FourDirFireStrategy) Class.forName(goodFS).getConstructor().newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
+    private void initCurTankImage() {
+        if (group == Group.SELF) {
+            switch (dir) {
+                case LEFT:
+                    curTankImage = ResourceMgr.selfTankL;
+                    break;
+                case UP:
+                    curTankImage = ResourceMgr.selfTankU;
+                    break;
+                case RIGHT:
+                    curTankImage = ResourceMgr.selfTankR;
+                    break;
+                case DOWN:
+                    curTankImage = ResourceMgr.selfTankD;
+                    break;
+                default:
+                    break;
             }
         } else {
-            this.fireStrategy = new DefaultFireStrategy();
-        }
+            switch (dir) {
+                case LEFT:
+                    curTankImage = ResourceMgr.enemyTankL;
+                    break;
+                case UP:
+                    curTankImage = ResourceMgr.enemyTankU;
+                    break;
+                case RIGHT:
+                    curTankImage = ResourceMgr.enemyTankR;
+                    break;
+                case DOWN:
+                    curTankImage = ResourceMgr.enemyTankD;
+                    break;
+                default:
+                    break;
+            }
 
-	}
-
-    public FireStrategy getFireStrategy() {
-        return fireStrategy;
-    }
-    public void setFireStrategy(FireStrategy fireStrategy) {
-        this.fireStrategy = fireStrategy;
-    }
-
-    /**
-     * 移动
-     */
-    private void move() {
-        if (!living) {
-            return;
-        }
-
-        if (!isMoving()) {
-            return;
-        }
-        switch (dir) {
-            case LEFT:
-                // 这里修改x值之后，在下次调用paint方法时 调用fillRect实现坦克的移动
-                x -= SPEED;
-                break;
-            case UP:
-                y -= SPEED;
-                break;
-            case RIGHT:
-                x += SPEED;
-                break;
-            case DOWN:
-                y += SPEED;
-                break;
-            default:
-                break;
-        }
-
-        if(this.group == Group.GOOD){
-            // 我的坦克发射炮弹要发出音乐
-            // new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
-        }
-
-
-        // 敌人的坦克时随机的发射炮弹
-        if ((this.group==Group.BAD) && random.nextInt(100) > 95) {
-            fire();
-            randomDir();
-        }
-        // 进行边界检测
-        boundsCheck();
-
-        // 更新碰撞检测的矩形
-        rect.x = this.x;
-        rect.y = this.y;
-    }
-
-
-    /**
-     * 边界检测
-     */
-    private void boundsCheck() {
-        if (this.x < 2) {
-            x = 2;
-        }
-        if (this.y < 28) {
-            y = 28;
-        }
-        if (this.x > TankFrame.GAME_WIDTH - Tank.WIDTH - 2) {
-            x = TankFrame.GAME_WIDTH - Tank.WIDTH - 2;
-        }
-        if (this.y > TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2) {
-            y = TankFrame.GAME_HEIGHT - Tank.HEIGHT - 2;
         }
     }
 
-
-    /**
-     * 随机改变移动的方向
-     */
-    private void randomDir() {
-        // Dir.values() 返回所有可能值的数组
-        this.dir = Dir.values()[random.nextInt(4)];
+    private void updateRect() {
+        rect.x = x;
+        rect.y = y;
+        rect.width = curTankImage.getWidth();
+        rect.height = curTankImage.getHeight();
     }
 
     @Override
-    public void paint(Graphics g) {
-        if(!living) {
-            this.gameModel.tanks.remove(this);
-        }
-        // 根据方向画出坦克 根据敌我坦克画出不同的坦克
-        switch (dir) {
-            case LEFT:
-                g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankL : ResourceMgr.badTankL, x, y, null);
-                break;
-            case UP:
-                g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankU : ResourceMgr.badTankU, x, y, null);
-                break;
-            case RIGHT:
-                g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankR : ResourceMgr.badTankR, x, y, null);
-                break;
-            case DOWN:
-                g.drawImage(Group.GOOD == this.group ? ResourceMgr.goodTankD : ResourceMgr.badTankD, x, y, null);
-                break;
-        }
-        if (!isMoving()) {
-            return;
-        }
-        move();
+    public void setDir(Dir dir) {
+        this.dir = dir;
     }
 
+    @Override
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    @Override
+    public abstract void paint(Graphics g);
 
     /**
-     * 发射子弹
-     * 有两种方式
-     * 1 用参数的方式传进来  这种方式缺点是每次调用都需要new因此需要把策略设计成单例的
-     * 2 使用成员变量，一般情况下不用成员变量 传参数会使得类结构复杂
-     *   这里我们使用成员变量的方式来解决
+     * 坦克移动
+     */
+    protected void move() {
+        oldX = x;
+        oldY = y;
+
+        if(!moving){
+            return;
+        }
+
+        switch (dir) {
+            case LEFT: {
+                x -= speed;
+                curTankImage = (group == Group.SELF ? ResourceMgr.selfTankL : ResourceMgr.enemyTankL);
+                break;
+            }
+            case UP: {
+                y -= speed;
+                curTankImage = (group == Group.SELF ? ResourceMgr.selfTankU : ResourceMgr.enemyTankU);
+                break;
+            }
+            case RIGHT: {
+                x += speed;
+                curTankImage = (group == Group.SELF ? ResourceMgr.selfTankR : ResourceMgr.enemyTankR);
+                break;
+            }
+            case DOWN: {
+                y += speed;
+                curTankImage = (group == Group.SELF ? ResourceMgr.selfTankD : ResourceMgr.enemyTankD);
+                break;
+            }
+            default:
+                break;
+        }
+        // 添加边界检测：坦克不能走出游戏区域
+        boundsCheck();
+
+        updateRect();
+    }
+
+    /**
+     * 边界检测：坦克不能走出游戏区域
+     */
+    private void boundsCheck() {
+        if (x < 2) {
+            x = 2;
+        }
+        if (y < 25) {
+            y = 25;
+        }
+        if (x + curTankImage.getWidth() > GameModel.INSTANCE.gameWidth) {
+            x = GameModel.INSTANCE.gameWidth - curTankImage.getWidth();
+        }
+        if (y + curTankImage.getHeight() > GameModel.INSTANCE.gameHeight) {
+            y = GameModel.INSTANCE.gameHeight - curTankImage.getHeight();
+        }
+    }
+
+    /**
+     * 打出一颗子弹
      */
     @Override
     public void fire() {
@@ -190,10 +179,16 @@ public class Tank extends BaseTank {
     }
 
     /**
-     * 坦克消亡
+     * 获取坦克图片坐标和宽高
+     * @return
      */
     @Override
-    public void die() {
-        this.living = false;
+    public Rectangle getRect() {
+        return rect;
+    }
+
+    @Override
+    public Group getGroup() {
+        return group;
     }
 }

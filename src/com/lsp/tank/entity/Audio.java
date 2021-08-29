@@ -4,6 +4,9 @@ package com.lsp.tank.entity;
 import javax.sound.sampled.*;
 import java.io.IOException;
 
+/**
+ * 音乐处理
+ */
 public class Audio {
 
 	byte[] b = new byte[1024 * 1024 * 15];

@@ -1,9 +1,10 @@
 package com.lsp.tank.entity;
 
 
-import com.lsp.tank.entity.abstractFactory.BaseTank;
-import com.lsp.tank.entity.abstractFactory.DefaultFactory;
-import com.lsp.tank.entity.abstractFactory.GameFactory;
+import com.lsp.tank.entity.abstractEntity.BaseTank;
+import com.lsp.tank.factory.DefaultFactory;
+import com.lsp.tank.factory.abstractFactory.GameFactory;
+import com.lsp.tank.mgr.PropertyMgr;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -21,10 +22,10 @@ import java.util.LinkedList;
  */
 public class TankFrame extends Frame {
 
-    /** 游戏界面的大小*/
-    public static final int GAME_WIDTH = 1080, GAME_HEIGHT = 960;
+    /** 游戏界面的大小 1080 *960 */
+    public static final int GAME_WIDTH = PropertyMgr.getGameWidth(), GAME_HEIGHT = PropertyMgr.getGameHeight();
 
-    public GameModel gameModel = new GameModel();
+    public GameModel gameModel = GameModel.INSTANCE;
 
 
     /**
@@ -114,7 +115,7 @@ public class TankFrame extends Frame {
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
-            BaseTank myTank = gameModel.getMainTank();
+            BaseTank myTank = GameModel.getInstance().getMainTank();
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     if (!moveDir.contains(Dir.LEFT)) {
@@ -147,6 +148,10 @@ public class TankFrame extends Frame {
                 default:
                     break;
             }
+//            TODO  tanke的移动处理  发射炮弹处理
+
+
+
 
         }
         /**

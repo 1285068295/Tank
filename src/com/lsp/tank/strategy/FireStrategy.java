@@ -1,6 +1,6 @@
-package com.lsp.tank.entity;
+package com.lsp.tank.strategy;
 
-import com.lsp.tank.entity.abstractFactory.BaseTank;
+import com.lsp.tank.entity.Tank;
 
 /**
  * @author ：Lisp
@@ -11,6 +11,10 @@ import com.lsp.tank.entity.abstractFactory.BaseTank;
  */
 public interface FireStrategy {
 
-    void fire(BaseTank tank);
+    /**
+     * 坦克的开火方式
+     * @param tank
+     */
+    void fire(Tank tank);
 
 }

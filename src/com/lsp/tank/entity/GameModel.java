@@ -1,11 +1,15 @@
 package com.lsp.tank.entity;
 
-import com.lsp.tank.entity.abstractFactory.*;
+import com.lsp.tank.collider.ColliderChain;
+import com.lsp.tank.entity.abstractEntity.BaseTank;
+import com.lsp.tank.factory.DefaultFactory;
+import com.lsp.tank.factory.abstractFactory.GameFactory;
+import com.lsp.tank.mgr.PropertyMgr;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author ：Lisp
@@ -15,27 +19,67 @@ import java.util.List;
  * @description :model控制层  原始的代码为view（TankFrame）层包含了坦克 子弹  爆炸  耦合性太强
  * 现在拆分出model层来控制坦克 子弹  爆炸等，而view层与model层进行打交道
  * 这就是门面模式  坦克 子弹 爆炸与model经行交互 而model与view层交互
+ *
+ * gameModel相对于tankframe相当于门面模式
+ * gameMode相对于tank explode wall bullet 等 对内是调停者角色
+ *
  */
 public class GameModel {
+
+    /**
+     * 游戏区域宽高
+     */
+    public int gameWidth, gameHeight;
+
+    /**
+     * 单例模式
+     */
+    public static final GameModel INSTANCE = new GameModel();
+
+    public static GameModel getInstance(){
+       return INSTANCE;
+    }
+
+    private GameModel(){ }
+    
+
+    static {
+        INSTANCE.init();
+    }
+    /**
+     * 游戏物体容器包括 坦克 子弹 爆炸 墙等
+     */
+    public List<GameObject> gameObjects = new ArrayList<>();
+
+    DefaultSelfTank myTank;
+
+    /**
+     * 初始化方法
+     */
+    private void init() {
+        gameWidth = PropertyMgr.getGameWidth();
+        gameHeight = PropertyMgr.getGameHeight();
+
+        /** 创建一个单人的坦克 */
+        myTank = new DefaultSelfTank(UUID.randomUUID(),200, 400,   Dir.UP,20);
+        add(myTank);
+        // 初始化敌方坦克
+//        for (int i = 0; i <10; i++) {
+//            add(gameFactory.createEnemyTank(UUID.randomUUID(),100 + i * 100, 100, Dir.DOWN, 10));
+//        }
+
+        // 初始化墙
+//        gameObjects.add(gameFactory.createWall(100, 400, 60, 200));
+//        gameObjects.add(gameFactory.createWall(820, 400, 60, 200));
+        gameObjects.add(gameFactory.createWall(200, 200, 200, 50));
+//        gameObjects.add(gameFactory.createWall(600, 200, 200, 50));
+    }
+
+
     /**
      * 游戏窗口引用 tankFrame作为view层
      */
 //    public TankFrame tankFrame;
-
-    /** 创建一个单人的坦克 */
-    Tank myTank = new Tank(200, 400, Dir.RIGHT, Group.GOOD, this);
-
-
-
-
-    /** 创建坦克子弹容器 */
-    public List<BaseBullet> bullets = new ArrayList<>();
-
-    /** 创建敌人坦克容器 */
-    public List<BaseTank> tanks = new ArrayList<>();
-
-    /** 爆炸集合 */
-    public List<BaseExplode> explodes = new ArrayList<>();
 
     /**
      * 游戏工厂可以创建坦克 子弹  爆炸
@@ -44,59 +88,49 @@ public class GameModel {
      */
     public GameFactory gameFactory = new DefaultFactory();
 
-    public GameModel(){
 
-        // 初始化敌方坦克
-        for (int i = 0; i <10; i++) {
-            this.tanks.add(this.gameFactory.createTank(100 + i * 100, 200, Dir.DOWN, Group.BAD, this));
-        }
-
-    }
+    /**
+     * 碰撞器链条
+     */
+    public ColliderChain colliderChain = new ColliderChain();
 
 
     /**
-     * 用来存储按下的方向四个键，当同时按下多个键时，以最后一次的按键为主
-     * 每松开一个键就从栈中弹出一个数据，所以栈中最多存4个按键数据
-     *
-     * 注意 不能用stack来存储  释放按键时是无序释放的
-     * →↓←
+     * 添加游戏物体
      */
-    LinkedList<Dir> moveDir = new LinkedList<>();
+    public void add(GameObject go){
+        gameObjects.add(go);
+    }
+
+    /**
+     * 移除游戏物体
+     */
+    public void remove(GameObject go){
+        gameObjects.remove(go);
+    }
 
 
     public void paint(Graphics g){
         Color c = g.getColor();
         g.setColor(Color.WHITE);
-        g.drawString("坦克数量为:" + tanks.size(), 10,60);
-        g.drawString("子弹数量为:" + bullets.size(), 10,80);
-        g.drawString("爆炸数量为:" + explodes.size(), 10,100);
+
+//        g.drawString("坦克数量为:" + tanks.size(), 10,60);
+//        g.drawString("子弹数量为:" + bullets.size(), 10,80);
+//        g.drawString("爆炸数量为:" + explodes.size(), 10,100);
         g.setColor(c);
 
-        myTank.paint(g);
-        // 所有的子弹都一样  使用普通循环删除处理即可
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).paint(g);
+        // 绘制所有游戏物体：坦克、子弹、爆炸
+        for (int i = 0; i < gameObjects.size(); i++) {
+            gameObjects.get(i).paint(g);
         }
 
-        // 画出敌人坦克
-        for (int i = 0; i < tanks.size(); i++) {
-            tanks.get(i).paint(g);
-        }
-
-
-        // 检测坦克与子弹是否碰撞了  碰撞后要移除子弹和坦克
-        for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < tanks.size(); j++) {
-                // 检测子弹是否与坦克碰撞了 添加爆炸
-                bullets.get(i).collideWith(tanks.get(j));
+        // 处理游戏物体间的碰撞
+        for (int i = 0; i < gameObjects.size(); i++) {
+            for (int j = i + 1; j < gameObjects.size(); j++) {
+                colliderChain.collide(gameObjects.get(i), gameObjects.get(j));
             }
         }
 
-        // 画出爆炸图
-        for (int i = 0; i < explodes.size(); i++) {
-            explodes.get(i).paint(g);
-
-        }
     }
 
     /**

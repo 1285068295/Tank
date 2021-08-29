@@ -6,4 +6,9 @@ gameWidth=1080
 gameHeight=720
 #我方坦克的开炮策略
 goodFS=com.lsp.tank.entity.FourDirFireStrategy
+#敌方坦克的开炮策略
 badFS=com.lsp.tank.entity.DefaultFireStrategy
+#游戏物体碰撞策略 责任链模式
+colliders=BulletTankCollider,BulletWallCollider,TankTankCollider,TankWallCollider
+
+
