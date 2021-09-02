@@ -2,9 +2,9 @@ package com.lsp.tank.entity;
 
 
 import com.lsp.tank.entity.abstractEntity.BaseTank;
-import com.lsp.tank.factory.DefaultFactory;
-import com.lsp.tank.factory.abstractFactory.GameFactory;
 import com.lsp.tank.mgr.PropertyMgr;
+import music.MusicPlayThreadPool;
+import music.TankMove;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -26,14 +26,6 @@ public class TankFrame extends Frame {
     public static final int GAME_WIDTH = PropertyMgr.getGameWidth(), GAME_HEIGHT = PropertyMgr.getGameHeight();
 
     public GameModel gameModel = GameModel.INSTANCE;
-
-
-    /**
-     * 游戏工厂可以创建坦克 子弹  爆炸
-     * 方形爆炸 方向炮弹 RectFactory DefaultFactory
-     * 这里只用切换了factory 会切换一整套的ui
-     */
-    public GameFactory gameFactory = new DefaultFactory();
 
     public TankFrame() {
         setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -115,7 +107,7 @@ public class TankFrame extends Frame {
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
-            BaseTank myTank = GameModel.getInstance().getMainTank();
+            BaseTank myTank = GameModel.INSTANCE.getMainTank();
             switch (key) {
                 case KeyEvent.VK_LEFT:
                     if (!moveDir.contains(Dir.LEFT)) {
@@ -145,14 +137,19 @@ public class TankFrame extends Frame {
                     myTank.setMoving(true);
                     setMainTankDir();
                     break;
+                case KeyEvent.VK_S:
+                    // 按下L键从硬盘读取数据
+                    gameModel.save();
+                    break;
+                case KeyEvent.VK_L:
+                    // 按下S键把内存中的对象序列化到硬盘上
+                    gameModel.load();
+                    break;
+
                 default:
                     break;
             }
-//            TODO  tanke的移动处理  发射炮弹处理
-
-
-
-
+           MusicPlayThreadPool.playMusic(new TankMove());
         }
         /**
          * 松开键盘时必须要恢复为false

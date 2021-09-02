@@ -2,9 +2,11 @@ package com.lsp.tank.strategy;
 
 import com.lsp.tank.entity.Dir;
 import com.lsp.tank.entity.GameModel;
-import com.lsp.tank.mgr.ResourceMgr;
 import com.lsp.tank.entity.Tank;
 import com.lsp.tank.entity.abstractEntity.BaseBullet;
+import com.lsp.tank.mgr.ResourceMgr;
+import music.MusicPlayThreadPool;
+import music.TankFire;
 
 import java.util.UUID;
 
@@ -51,12 +53,8 @@ public class FourDirectionsFireStrategy implements FireStrategy {
             BaseBullet bullet = GameModel.INSTANCE.gameFactory.createBullet(UUID.randomUUID(), t.getId(), bX, bY, dir, t.group);
             GameModel.INSTANCE.add(bullet);
 
-            // 声音先注释 后面优化成线程池处理 TODO
-//            if(t.getGroup() == Group.GOOD){
-//                // 我的坦克发射炮弹要发出音乐
-//                new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
-//            }
-
+            // 背景音乐 使用线程池来播放音乐
+             MusicPlayThreadPool.playMusic(new TankFire());
         }
 
 

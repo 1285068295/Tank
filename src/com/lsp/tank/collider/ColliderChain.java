@@ -1,7 +1,7 @@
 package com.lsp.tank.collider;
 
-import com.lsp.tank.entity.GameObject;
 import com.lsp.tank.mgr.PropertyMgr;
+import com.lsp.tank.entity.GameObject;
 
 import java.util.List;
 

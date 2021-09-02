@@ -7,6 +7,7 @@ import com.lsp.tank.strategy.FireStrategy;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -29,8 +30,12 @@ public abstract class Tank extends BaseTank {
 
     /**
      * 当前坦克加载的图片
+     * 为了能够对当前对象进行序列化操作 这里使用transient 或略掉BufferedImage类型的属性
+     * 应为BufferedImage没有实现Serializable接口  不能进行序列化
+     * 重写了readObject为了能够对curTankImage进行赋值初始化
+     *
      */
-    public BufferedImage curTankImage;
+   public transient BufferedImage curTankImage;
 
     public Tank(UUID id, int x, int y, Dir dir, int speed, Group group) {
         this.id = id;
@@ -48,6 +53,17 @@ public abstract class Tank extends BaseTank {
             fireStrategy = PropertyMgr.getEnemy_tank_fs();
         }
     }
+
+    /**
+     * 自己定制反序列化过程
+     * 来初始化 curTankImage 属性，如果这个属性为null后面的方法使用这个属性时会报错
+     */
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        initCurTankImage();
+    }
+
 
     /**
      * 初始化坦克时的图片

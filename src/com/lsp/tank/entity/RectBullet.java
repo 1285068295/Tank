@@ -34,7 +34,7 @@ public class RectBullet extends BaseBullet {
     @Override
     public void paint(Graphics g){
         if (!isLiving()) {
-            GameModel.getInstance().remove(this);
+            GameModel.INSTANCE.remove(this);
         }
         Color c = g.getColor();
         g.setColor(Color.YELLOW);

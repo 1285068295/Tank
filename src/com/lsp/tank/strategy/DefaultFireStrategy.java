@@ -9,9 +9,13 @@ package com.lsp.tank.strategy;
  */
 
 
-import com.lsp.tank.entity.*;
+import com.lsp.tank.entity.GameModel;
+import com.lsp.tank.entity.Group;
+import com.lsp.tank.entity.Tank;
 import com.lsp.tank.entity.abstractEntity.BaseBullet;
 import com.lsp.tank.mgr.ResourceMgr;
+import music.MusicPlayThreadPool;
+import music.TankFire;
 
 import java.util.UUID;
 
@@ -59,9 +63,12 @@ public class DefaultFireStrategy implements FireStrategy {
         GameModel.INSTANCE.add(bullet);
 
         if(t.getGroup() == Group.SELF){
-            // 我的坦克发射炮弹要发出音乐 TODO
-            new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
+            // 我的坦克发射炮弹要发出音乐
+            MusicPlayThreadPool.playMusic(new TankFire());
+
         }
+
+
 
     }
 }

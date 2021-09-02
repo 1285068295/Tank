@@ -1,5 +1,8 @@
 package com.lsp.tank.entity;
 
+import music.MusicPlayThreadPool;
+import music.War;
+
 /**
  * @author ：Lisp
  * @date： 2021/8/19
@@ -16,21 +19,12 @@ public class Main {
         // 窗口类
         TankFrame tf = new TankFrame();
 
-
-        // 背景音乐  需要开启新的线程  因为loop是死循环
-//        new Thread(()->{
-//                Audio a = new Audio("audio/war1.wav");
-//        a.loop();
-//        }).start();
-
-
-
+        // 背景音乐 使用线程池来播放音乐
+        MusicPlayThreadPool.playMusic(new War());
         while (true){
-            Thread.sleep(50);
+            Thread.sleep(25);
             tf.repaint();// 会调用paint方法
         }
-
-
 
     }
 

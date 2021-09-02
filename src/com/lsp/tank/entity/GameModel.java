@@ -1,12 +1,13 @@
 package com.lsp.tank.entity;
 
+import com.lsp.tank.factory.abstractfactory.GameFactory;
 import com.lsp.tank.collider.ColliderChain;
 import com.lsp.tank.entity.abstractEntity.BaseTank;
 import com.lsp.tank.factory.DefaultFactory;
-import com.lsp.tank.factory.abstractFactory.GameFactory;
 import com.lsp.tank.mgr.PropertyMgr;
 
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +33,7 @@ public class GameModel {
     public int gameWidth, gameHeight;
 
     /**
-     * 单例模式
+     * 饿汉式单例模式
      */
     public static final GameModel INSTANCE = new GameModel();
 
@@ -61,18 +62,18 @@ public class GameModel {
         gameHeight = PropertyMgr.getGameHeight();
 
         /** 创建一个单人的坦克 */
-        myTank = new DefaultSelfTank(UUID.randomUUID(),200, 400,   Dir.UP,20);
+        myTank = new DefaultSelfTank(UUID.randomUUID(),200, 400,   Dir.UP,10);
         add(myTank);
         // 初始化敌方坦克
-//        for (int i = 0; i <10; i++) {
-//            add(gameFactory.createEnemyTank(UUID.randomUUID(),100 + i * 100, 100, Dir.DOWN, 10));
-//        }
+        for (int i = 0; i <10; i++) {
+            add(gameFactory.createEnemyTank(UUID.randomUUID(),100 + i * 100, 100, Dir.DOWN, 10));
+        }
 
         // 初始化墙
-//        gameObjects.add(gameFactory.createWall(100, 400, 60, 200));
-//        gameObjects.add(gameFactory.createWall(820, 400, 60, 200));
-        gameObjects.add(gameFactory.createWall(200, 200, 200, 50));
-//        gameObjects.add(gameFactory.createWall(600, 200, 200, 50));
+        gameObjects.add (gameFactory.createWall(150, 150, 200, 50));
+        gameObjects.add(gameFactory.createWall(550, 150, 200, 50));
+        gameObjects.add(gameFactory.createWall(300, 300, 50, 200));
+        gameObjects.add(gameFactory.createWall(550, 300, 50, 200));
     }
 
 
@@ -138,5 +139,61 @@ public class GameModel {
      */
     public BaseTank getMainTank() {
         return myTank;
+    }
+
+    /**
+     * 内存中坦克数据序列化到硬盘上
+     * 需要序列化的对象需要实现标记接口 Serializable
+     */
+    public void save() {
+        File f = new File("c:/tank.data");
+        ObjectOutputStream oos = null;
+        try {
+            oos = new ObjectOutputStream(new FileOutputStream(f));
+            oos.writeObject(myTank);
+            oos.writeObject(gameObjects);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    /**
+     * 从硬盘加载之前序列化的对象信息
+     */
+    public void load() {
+        File f = new File("c:/tank.data");
+        ObjectInputStream ois = null;
+        try {
+            f.createNewFile();
+            ois = new ObjectInputStream(new FileInputStream(f));
+            // 在父类Tank中重写了 readObject 方法
+            myTank = (DefaultSelfTank) ois.readObject();
+            gameObjects = (List) ois.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

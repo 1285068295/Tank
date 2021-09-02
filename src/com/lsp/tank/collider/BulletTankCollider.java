@@ -1,6 +1,9 @@
 package com.lsp.tank.collider;
 
-import com.lsp.tank.entity.*;
+import com.lsp.tank.entity.GameModel;
+import com.lsp.tank.entity.GameObject;
+import com.lsp.tank.entity.GameObjectType;
+import com.lsp.tank.entity.Group;
 
 /**
  * @author ：Lisp

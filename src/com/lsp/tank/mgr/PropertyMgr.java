@@ -1,8 +1,8 @@
 package com.lsp.tank.mgr;
 
-import com.lsp.tank.collider.Collider;
-import com.lsp.tank.factory.abstractFactory.GameFactory;
+import com.lsp.tank.factory.abstractfactory.GameFactory;
 import com.lsp.tank.strategy.FireStrategy;
+import com.lsp.tank.collider.Collider;
 
 import java.io.IOException;
 import java.util.LinkedList;

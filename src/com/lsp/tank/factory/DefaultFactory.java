@@ -4,7 +4,7 @@ import com.lsp.tank.entity.*;
 import com.lsp.tank.entity.abstractEntity.BaseBullet;
 import com.lsp.tank.entity.abstractEntity.BaseExplode;
 import com.lsp.tank.entity.abstractEntity.BaseTank;
-import com.lsp.tank.factory.abstractFactory.GameFactory;
+import com.lsp.tank.factory.abstractfactory.GameFactory;
 
 import java.awt.*;
 import java.util.UUID;

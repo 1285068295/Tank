@@ -1,9 +1,5 @@
 package com.lsp.tank.entity;
 
-import com.lsp.tank.entity.Dir;
-import com.lsp.tank.entity.Group;
-import com.lsp.tank.entity.Tank;
-
 import java.awt.*;
 import java.util.Random;
 import java.util.UUID;

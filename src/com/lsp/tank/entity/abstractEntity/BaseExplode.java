@@ -1,6 +1,9 @@
 package com.lsp.tank.entity.abstractEntity;
 
-import com.lsp.tank.entity.*;
+import com.lsp.tank.entity.Dir;
+import com.lsp.tank.entity.GameObject;
+import com.lsp.tank.entity.GameObjectType;
+import com.lsp.tank.entity.Group;
 
 import java.awt.*;
 import java.util.UUID;
@@ -34,8 +37,8 @@ public abstract class BaseExplode extends GameObject {
     public BaseExplode(Rectangle tankRect) {
         this.tankRect = tankRect;
         rect = new Rectangle();
-        // TODO
-        new Thread(()->new Audio("audio/explode.wav").play()).start();
+        // 线程池播放音乐
+        // MusicPlayThreadPool.playMusic(new TankExplode());
     }
 
     /**

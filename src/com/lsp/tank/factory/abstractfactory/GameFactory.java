@@ -1,4 +1,4 @@
-package com.lsp.tank.factory.abstractFactory;
+package com.lsp.tank.factory.abstractfactory;
 
 import com.lsp.tank.entity.Dir;
 import com.lsp.tank.entity.GameObject;

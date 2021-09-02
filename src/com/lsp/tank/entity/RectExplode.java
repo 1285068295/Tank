@@ -1,7 +1,5 @@
 package com.lsp.tank.entity;
 
-import com.lsp.tank.entity.Audio;
-import com.lsp.tank.entity.GameModel;
 import com.lsp.tank.entity.abstractEntity.BaseExplode;
 
 import java.awt.*;
@@ -18,8 +16,8 @@ public class RectExplode extends BaseExplode {
     public RectExplode(Rectangle rectangle) {
         super(rectangle);
         // 播放爆炸声音
-        // 如果再主线程进行加载播放声音 会造成页面卡顿现象 TODO
-        new Thread(()->new Audio("audio/explode.wav").play()).start();
+        // 如果再主线程进行加载播放声音 会造成页面卡顿现象
+        // MusicPlayThreadPool.playMusic(new TankExplode());
     }
 
     @Override

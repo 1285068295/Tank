@@ -1,6 +1,7 @@
 package com.lsp.tank.entity;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -10,7 +11,7 @@ import java.util.UUID;
  * @slogan:
  * @description :游戏物体类 顶层设计
  */
-public abstract class GameObject {
+public abstract class GameObject implements Serializable {
 
     /**
      * 游戏物体坐标

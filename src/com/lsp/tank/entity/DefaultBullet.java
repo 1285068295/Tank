@@ -5,6 +5,7 @@ import com.lsp.tank.mgr.ResourceMgr;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -16,7 +17,10 @@ import java.util.UUID;
  */
 public class DefaultBullet extends BaseBullet {
 
-    public BufferedImage curBulletImage;
+    /**
+     * transient 瞬时态的 序列话时会忽略这个属性
+     */
+    public transient BufferedImage curBulletImage;
 
     public DefaultBullet(UUID id, UUID tankId, int x, int y, Dir dir, Group group) {
         this.id = id;
@@ -26,6 +30,26 @@ public class DefaultBullet extends BaseBullet {
         this.dir = dir;
         this.group = group;
         this.rect = new Rectangle();
+        initCurTankImage();
+        updateRect(x, y);
+    }
+
+
+
+    /**
+     * 自己定制反序列化过程
+     * 来初始化 curTankImage 属性，如果这个属性为null后面的方法使用这个属性时会报错
+     */
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        initCurTankImage();
+    }
+
+    /**
+     * 初始化子弹图片
+     */
+    private void initCurTankImage() {
         switch (dir) {
             case LEFT: curBulletImage = ResourceMgr.bulletL; break;
             case UP: curBulletImage = ResourceMgr.bulletU; break;
@@ -33,7 +57,6 @@ public class DefaultBullet extends BaseBullet {
             case DOWN: curBulletImage = ResourceMgr.bulletD; break;
             default:break;
         }
-        updateRect(x, y);
     }
 
 
@@ -53,7 +76,7 @@ public class DefaultBullet extends BaseBullet {
     @Override
     public void paint(Graphics g){
         if(!isLiving()) {
-            GameModel.getInstance().remove(this);
+            GameModel.INSTANCE.remove(this);
         }
         g.drawImage(curBulletImage, x, y, null);
         // 移动子弹
